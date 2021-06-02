@@ -1,29 +1,16 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import { constantRoutes } from "@/router/config";
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
-
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+  // 打包成webapp采用hash模式的路由，采用history路由时因为webapp要配置pulicpath使用相对路径会造成冲突
+  // mode: 'hash',
+  // 基路径
+  base: '/',
+  routes: constantRoutes
 })
 
 export default router

@@ -1,15 +1,27 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
     <router-view/>
   </div>
 </template>
 
+<script>
+export default {
+  data () {
+    return {
+    }
+  },
+  mounted () {
+    //当页面刷新时会销毁Vuex中的数据,这里设置全局监听,当页面刷新时把state存入缓存
+    window.addEventListener('beforeunload', () => {
+      sessionStorage.setItem('store',JSON.stringify(this.$store.state))
+    })
+  }
+}
+</script>
+
 <style>
 #app {
+  height: 100%;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
