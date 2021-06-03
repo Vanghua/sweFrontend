@@ -54,8 +54,12 @@ router.beforeEach((to, from, next) => {
                 next()
             else {
                 // 如果浏览器中没有用户缓存信息且Vuex中也没有用户信息，并且用户当前想访问非登录界面，那么就是非法访问，需要重新跳回登录界面
-                if (store.state.user.username == '')
-                    next({"path": '/'})
+                if (store.state.user.username == '') {
+                    if(to.path == '/forget')
+                        next()
+                    else
+                        next({"path": '/'})
+                }
                 // Vuex中有用户信息，说明此时用户已经登录
                 else {
                     // 正常跳转

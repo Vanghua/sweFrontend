@@ -1,11 +1,18 @@
 import Login from "@/views/Login/Login";
 import Page from "@/views/Page/Page";
+import Forget from "@/views/Login/Forget";
 
 export const constantRoutes = [
   {
     path: '/',
     name: 'Login',
     component: Login,
+    meta: { title: '登录', keepalive: true }
+  },
+  {
+    path: '/forget',
+    name: 'Forget',
+    component: Forget,
     meta: { title: '登录', keepalive: true }
   }
 ]

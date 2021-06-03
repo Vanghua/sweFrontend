@@ -10,24 +10,20 @@
                 <a-input size="large"
                          type="text"
                          placeholder="请输入用户名"
-                         v-decorator="[
-                             'username',
-                             {rules: [{min: 2, max: 16, required: true, pattern: new RegExp('^[0-9a-zA-Z\u4e00-\u9fa5]{2,12}$','i'), message: '用户名输入有误'}], validateTrigger: 'change'}]">
+                         v-decorator="['username']">
                   <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25);"/>
                 </a-input>
               </a-form-item>
               <a-form-item>
                 <a-input-password size="large"
                                   placeholder="请输入密码"
-                                  v-decorator="[
-                                      'password',
-                                      {rules: [{min: 6, max: 12, required: true, pattern: new RegExp('^[0-9a-zA-Z]{6,12}$','i'), message:'密码输入有误'}], validateTrigger: 'change'}]">
+                                  v-decorator="['password']">
                   <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25);"></a-icon>
                 </a-input-password>
               </a-form-item>
               <a-form-item>
                 <a-checkbox style="float: left; color: white;" :default-checked="true" @change="checkBoxChange">记住密码</a-checkbox>
-                <div style="float: right; color: white;">忘记密码</div>
+                <div style="float: right; color: white; cursor: pointer;" @click="$router.push({name: 'Forget'})">忘记密码</div>
               </a-form-item>
               <a-form-item>
                 <a-button type="primary" size="large" style="width: 80%;" htmlType="submit" :disabled="State.loginBtn">登录</a-button>
@@ -46,8 +42,8 @@
               <a-form-item has-feedback>
                 <a-input-password
                     size="large"
-                    placeholder="请输入6-12位数字或英文组成的密码"
-                    v-decorator="['userpassword',{rules: [{ min: 6, max: 12, required: true, pattern: new RegExp('^[0-9a-zA-Z]{6,12}$','i'), message: '密码输入不合法', validator: compareUserPassword}], validateTrigger: 'change'}]">
+                    placeholder="请输入8-16位的密码必须是数字,字母,字符的组合"
+                    v-decorator="['userpassword',{rules: [{ min: 8, max: 16, required: true, pattern: new RegExp('^(?![\\d]+$)(?![a-zA-Z]+$)(?![^\\da-zA-Z]+$).{8,16}$','i'), validator: compareUserPassword}], validateTrigger: 'change'}]">
                   <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25);"></a-icon>
                 </a-input-password>
               </a-form-item>
@@ -55,7 +51,7 @@
                 <a-input-password
                     size="large"
                     placeholder="请确认密码"
-                    v-decorator="['userpasswordcheck',{rules: [{ min: 6, max: 12, required: true, pattern: new RegExp('^[0-9a-zA-Z]{6,12}$','i'), message: '两次输入密码不同', validator: checkUserPassword}], validateTrigger: 'change'}]">
+                    v-decorator="['userpasswordcheck',{rules: [{ min: 8, max: 16, required: true, pattern: new RegExp('^(?![\\d]+$)(?![a-zA-Z]+$)(?![^\\da-zA-Z]+$).{8,16}$','i'), validator: checkUserPassword}], validateTrigger: 'change'}]">
                   <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25);"></a-icon>
                 </a-input-password>
               </a-form-item>
@@ -126,8 +122,8 @@
               <a-form-item has-feedback>
                 <a-input-password
                     size="large"
-                    placeholder="请输入6-12位数字或字母组成的密码"
-                    v-decorator="['workerpassword',{rules: [{ min: 6, max: 12, required: true, pattern: new RegExp('^[0-9a-zA-Z]{6,16}$','i'), message: '密码输入不合法', validator: compareWorkerPassword}], validateTrigger: 'change'}]">
+                    placeholder="请输入8-16位密码必须是数字，英文，字符的组合"
+                    v-decorator="['workerpassword',{rules: [{min: 8, max: 16, required: true, pattern: new RegExp('^(?![\\d]+$)(?![a-zA-Z]+$)(?![^\\da-zA-Z]+$).{8,16}$'), validator: compareWorkerPassword}], validateTrigger: 'change'}]">
                   <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25);"></a-icon>
                 </a-input-password>
               </a-form-item>
@@ -135,7 +131,7 @@
                 <a-input-password
                     size="large"
                     placeholder="请确认密码"
-                    v-decorator="['workerpasswordcheck',{rules: [{ min: 6, max: 12, required: true, pattern: new RegExp('^[0-9a-zA-Z]{6,16}$','i'), message: '两次输入密码不同', validator: checkWorkerPassword}], validateTrigger: 'change'}]">
+                    v-decorator="['workerpasswordcheck',{rules: [{ min: 8, max: 16, required: true, pattern: new RegExp('^(?![\\d]+$)(?![a-zA-Z]+$)(?![^\\da-zA-Z]+$).{8,16}$','i'), validator: checkWorkerPassword}], validateTrigger: 'change'}]">
                   <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25);"></a-icon>
                 </a-input-password>
               </a-form-item>
@@ -165,7 +161,7 @@
       </a-card>
     </div>
     <div id="copyright" style="position: absolute; bottom: 20px; display: flex; justify-content: center; height: 20px; width: 100%; color: grey;">
-      Copyrigt  2021  山东大学(威海) 19计算机(中澳) 黄皓 朱胤璘 赵玉淋 樊华
+      {{copyRight}}
     </div>
   </div>
 </template>
@@ -191,13 +187,16 @@ export default {
       // 用户是否选择记住密码
       isStored: true,
       // 员工注册时选择的员工类型
-      workerType: 'trans'
+      workerType: 'trans',
+      // 版权信息
+      copyRight: 'Copyrigt  2021  山东大学(威海) 19计算机(中澳) 黄皓 朱胤璘 赵玉淋 樊华'
     }
   },
   methods: {
     // 切换登录和注册触发事件
     tabChange(key) {
       this.tabPos = key
+      this.copyRight = this.tabPos == 3 ? '' : 'Copyrigt  2021  山东大学(威海) 19计算机(中澳) 黄皓 朱胤璘 赵玉淋 樊华'
     },
 
     // 网络请求问题
@@ -355,38 +354,61 @@ export default {
 
     // 验证工作人员两次密码输入是否一致(确认时检验)
     checkWorkerPassword(rules, values, callback) {
-      if(values.length < 6)
+      if(values.length < 8 || values.length > 16)
         callback('密码格式不对')
-      if(values === this.form.getFieldValue('workerpassword'))
-        callback()
+      if(values === this.form.getFieldValue('workerpassword')) {
+        let p = new RegExp('^(?![\\d]+$)(?![a-zA-Z]+$)(?![^\\da-zA-Z]+$).{8,16}$','i')
+        if(p.test(values))
+          callback()
+        else
+          callback('格式不对')
+      }
       else
         callback('两次输入密码不一致')
     },
 
     // 验证工作人员两次密码输入是否一致(再次修改密码时)
     compareWorkerPassword(rules, values, callback) {
-      if(values.length < 6)
+      if(values.length < 8 || values.length > 16)
         callback('密码格式不对')
       else if(this.form.getFieldValue('workerpasswordcheck') != undefined && this.form.getFieldValue('workerpasswordcheck') != values)
         callback('两次密码输入不一致')
-      else
-        callback()
+      else {
+        let p = new RegExp('^(?![\\d]+$)(?![a-zA-Z]+$)(?![^\\da-zA-Z]+$).{8,16}$','i')
+        if(p.test(values))
+          callback()
+        else
+          callback('格式不对')
+      }
     },
 
     // 验证用户两次输入的密码是否一致(确认时检验)
     checkUserPassword(rules, values, callback) {
-      if(values === this.form.getFieldValue('userpassword'))
-        callback()
-      else
+      if(values === this.form.getFieldValue('userpassword')) {
+        let p = new RegExp('^(?![\\d]+$)(?![a-zA-Z]+$)(?![^\\da-zA-Z]+$).{8,16}$','i')
+        if(p.test(values))
+          callback()
+        else
+          callback('格式不对')
+      }
+      else {
         callback('两次输入密码不一致')
+      }
     },
 
     // 验证用户两次输入的密码是否一致(再次修改密码时却)
     compareUserPassword(rules, values, callback) {
+      if(values.length < 8)
+        callback('密码格式不对')
       if(this.form.getFieldValue('userpasswordcheck') != undefined && this.form.getFieldValue('userpasswordcheck') != values)
         callback('两次密码输入不一致')
-      else
-        callback()
+      else {
+        let p = new RegExp('^(?![\\d]+$)(?![a-zA-Z]+$)(?![^\\da-zA-Z]+$).{8,16}$','i')
+        if(p.test(values))
+          callback()
+        else
+          callback('格式不对')
+      }
     },
 
     // 发送验证码
@@ -396,7 +418,10 @@ export default {
       } else {
         let payload = {email: this.tabPos == 2 ? this.form.getFieldValue('usermail') : this.form.getFieldValue('workermail') }
         fetchAPI('/account/getValidation', 'post', payload).then(res => {
-          this.successTip('成功', '验证码已发送')
+          if(res == '发送成功')
+            this.successTip('成功', '验证码已发送')
+          else
+            this.failureTip('错误', '邮箱已存在')
         })
       }
     },
@@ -424,6 +449,7 @@ export default {
   #loginCard::before {
     background-image: url('../../../public/bck.jpg');
     background-size: cover;
+    background-attachment: fixed;
     content: '';
     position: absolute;
     top: 0;
