@@ -1,5 +1,5 @@
 <template>
-  <a-card>
+  <a-card style="height: 100%; overflow-y: scroll;">
     <div id="houseMap" style="height: 400px; margin-bottom: 24px;"></div>
     <a-card v-for="house in houses" :key="house.name">
       <div style="display: flex; flex-direction: column; align-items: flex-start; font-size: 1.3rem;">

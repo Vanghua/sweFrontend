@@ -16,14 +16,14 @@
         {{userName}}
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="Logout"><a-icon type="undo"></a-icon><span>退出登录</span></a-menu-item>
-          <a-menu-item key="2"><a-icon type="setting"></a-icon><span>设置</span></a-menu-item>
+          <a-menu-item key="2" @click="Clear"><a-icon type="setting"></a-icon><span>清空缓存</span></a-menu-item>
         </a-menu>
         <a-icon type="setting" slot="icon"></a-icon>
       </a-dropdown-button>
     </div>
     <!-- 右边的内容栏 -->
-    <a-card :style="{float: 'left', width: rightWidth, height: 'calc(100% - 74px)', overflowY: 'scroll'}" @click="contentClick">
-      <router-view/>
+    <a-card id="content" :style="{float: 'left', width: rightWidth, height: 'calc(100% - 74px)'}" @click="contentClick">
+      <router-view />
     </a-card>
     <!-- 底部内容 -->
     <div :style="{height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', float: 'left', width: rightWidth, color: 'grey'}">
@@ -44,6 +44,11 @@ export default {
     this.adpatPhone()
     // 加载基础数据
     this.getData()
+  },
+  mounted() {
+    // router-view中的内容无法继承高度，在这里强制继承高度
+    let routerHeight = document.getElementById('content').firstChild
+    routerHeight.style.height = '100%'
   },
   data() {
     return {
@@ -164,8 +169,13 @@ export default {
     jump(target) {
       console.log(target.key)
       this.$router.push({name: target.key})
+    },
+    // 清除缓存
+    Clear() {
+      if(localStorage.getItem('userInfo'))
+        localStorage.removeItem('userInfo')
+      alert('清除成功')
     }
-
   }
 }
 </script>

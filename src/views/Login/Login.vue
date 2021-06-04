@@ -1,6 +1,6 @@
 <template>
   <div id="login">
-    <h1 style="width: 100%; margin-top: 44px; color: #F5F5DC; font-weight: bold; letter-spacing: 5px; text-shadow: 5px 5px 5px black;">物流仓储管理系统</h1>
+    <h1 id="title" :style="{width: '100%', marginTop: titleTop, color: '#F5F5DC', fontWeight: 'bold', letterSpacing: '5px', textShadow: '5px 5px 5px black'}">物流仓储管理系统</h1>
     <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
       <a-card id="loginCard" style="background-color: rgba(255,255,255,0.85); border-radius: 15px;">
         <a-form :form="form" @submit="submitAll">
@@ -174,6 +174,7 @@ export default {
   name: "Login",
   data() {
     return {
+      titleTop: '44px',
       // 挂载表单
       form: this.$form.createForm(this),
       // 登录按钮状态(如果状态变量不再对象里在使用es6解构后进行更改会失效，没仔细考虑这个问题)
@@ -197,6 +198,8 @@ export default {
     tabChange(key) {
       this.tabPos = key
       this.copyRight = this.tabPos == 3 ? '' : 'Copyrigt  2021  山东大学(威海) 19计算机(中澳) 黄皓 朱胤璘 赵玉淋 樊华'
+      if(key == 3)
+        this.titleTop = '16px'
     },
 
     // 网络请求问题

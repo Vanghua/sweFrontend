@@ -1,14 +1,35 @@
 <template>
-  <div style="height: 100%;">
+  <div id="test" style="height: 100%; overflow-y: scroll;">
+    <!-- 用于信息修改的模态窗口 -->
+    <userInfo-Modal v-if="isUserInfo"
+                    @close="isUserInfo = false"
+                    :userName="userName"
+                    :userEmail="'1418406055@qq.com'"
+                    :userPhone="userPhone"
+                    :userRealName="realName">
+    </userInfo-Modal>
+    <userPassword-Modal v-if="isUserPassword"
+                        @close="isUserPassword = false">
+    </userPassword-Modal>
+    <userEmail-Modal v-if="isUserEmail"
+                     @close="isUserEmail = false"
+                     :email="'1418406055@qq.com'"
+                     :userName="userName">
+    </userEmail-Modal>
+
     <a-card>
       <div style="float: left; margin-bottom: 16px; font-size: 1.2rem;">用户基本信息</div>
       <a-descriptions bordered :column="{xs: 1, xxl: 2, xl: 2, lg: 2, md: 2, sm: 1}">
         <a-descriptions-item label="用户名" :span="2">{{userName}}</a-descriptions-item>
-        <a-descriptions-item label="联系方式">{{userPhone}}</a-descriptions-item>
-        <a-descriptions-item label="真实姓名">{{realName}}</a-descriptions-item>
+        <a-descriptions-item label="绑定邮箱" :span="2">1418406055@qq.com</a-descriptions-item>
+        <a-descriptions-item label="真实姓名" :span="2">{{realName}}</a-descriptions-item>
+        <a-descriptions-item label="联系方式" :span="2">{{userPhone}}</a-descriptions-item>
       </a-descriptions>
-      <a-button type="primary" style="float: left; margin-top: 16px;"><a-icon type="edit"></a-icon>修改信息</a-button>
+      <a-button type="primary" style="float: left; margin-top: 16px;" @click="isUserInfo = !isUserInfo"><a-icon type="edit"></a-icon>修改信息</a-button>
+      <a-button type="primary" style="float: left; margin-top: 16px; margin-left: 16px;" @click="isUserPassword = !isUserPassword"><a-icon type="edit"></a-icon>修改密码</a-button>
+      <a-button type="primary" style="float: left; margin-top: 16px; margin-left: 16px;" @click="isUserEmail = !isUserEmail"><a-icon type="edit"></a-icon>修改邮箱</a-button>
     </a-card>
+
     <a-card style="margin-top: 44px; overflow: hidden;" v-show="address">
       <div style="float: left; margin-bottom: 16px; font-size: 1.2rem;">收寄件信息</div>
       <a-table :columns="accept" :dataSource="acceptData" bordered :pagination="false" :scroll="{x: 800}">
@@ -34,13 +55,28 @@
 </template>
 
 <script>
+import ChangeUserInfo from "@/views/User/ChangeUserInfo";
+import ChangeUserPassword from "@/views/User/ChangeUserPassword";
+import ChangeUserEmail from "@/views/User/ChangeUserEmail";
+
 export default {
   name: "User",
+  components: {
+    'userInfo-Modal': ChangeUserInfo,
+    'userPassword-Modal': ChangeUserPassword,
+    'userEmail-Modal': ChangeUserEmail
+  },
   created() {
     this.getData()
   },
   data() {
     return {
+      // 是否显示修改用户信息模态窗口
+      isUserInfo: false,
+      // 是否显示修改用户密码的模态窗口
+      isUserPassword: false,
+      // 是否显示修改邮箱的模态窗口
+      isUserEmail: false,
       userName: this.$store.state.user.username,
       userPhone: '17863025619',
       realName: '樊华',
@@ -138,7 +174,8 @@ export default {
           mailAddress: '香港特区'
         }
       ]
-    }
+    },
+
   }
 }
 </script>

@@ -8,6 +8,14 @@
             <div style="font-size: 1.3rem; color: white; font-weight: bold;">忘记密码</div>
           </a-form-item>
           <a-form-item>
+            <a-input size="large"
+                     type="text"
+                     placeholder="请输入用户名"
+                     v-decorator="['userName']">
+              <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25);"/>
+            </a-input>
+          </a-form-item>
+          <a-form-item>
             <a-input type="text"
                          size="large"
                          placeholder="请输入邮箱"
@@ -96,17 +104,20 @@ export default {
         that.resetBtn = false
       },3000)
       // 设置校验字段
-      let validateFieldsKey = ['email', 'checkNum', 'password', 'rePassword']
+      let validateFieldsKey = ['userName','email', 'checkNum', 'password', 'rePassword']
       // 校验
-      validateFields(validateFieldsKey, (err, values) => {
+      this.form.validateFields(validateFieldsKey, (err, values) => {
         if(!err) {
           let obj = {
-            accountEmail: values.email,
-            accountCheck: values.checkNum,
-            accountPassword: md5(values.password)
+            accountName: values.userName,
+            forgetValidation: values.checkNum,
+            newPassword: md5(values.password)
           }
-          fetchAPI('/','post', obj).then(res => {
-
+          fetchAPI('/account/modifyPasswordWithoutOldPassword','post', obj).then(res => {
+            if(res == '修改成功')
+              that.successTip('成功', '修改成功')
+            else
+              that.failureTip('失败', '用户名或验证码错误')
           })
         } else {
           that.failureTip('错误','输入不合法')
@@ -118,7 +129,7 @@ export default {
     checkPassword(rules, values, callback) {
       if(values.length < 8 || values.length > 16)
         callback('密码格式不对')
-      if(values === this.form.getFieldValue('workerpassword')) {
+      if(values === this.form.getFieldValue('password')) {
         let p = new RegExp('^(?![\\d]+$)(?![a-zA-Z]+$)(?![^\\da-zA-Z]+$).{8,16}$','i')
         if(p.test(values))
           callback()
@@ -133,7 +144,7 @@ export default {
     comparePassword(rules, values, callback) {
       if(values.length < 8 || values.length > 16)
         callback('密码格式不对')
-      else if(this.form.getFieldValue('workerpasswordcheck') != undefined && this.form.getFieldValue('workerpasswordcheck') != values)
+      else if(this.form.getFieldValue('rePassword') != undefined && this.form.getFieldValue('rePassword') != values)
         callback('两次密码输入不一致')
       else {
         let p = new RegExp('^(?![\\d]+$)(?![a-zA-Z]+$)(?![^\\da-zA-Z]+$).{8,16}$','i')
@@ -149,9 +160,13 @@ export default {
       if(this.form.getFieldValue('email') == undefined) {
         this.failureTip('错误', '请输入合法邮箱')
       } else {
-        let payload = { email: this.form.getFieldValue('email') }
-        fetchAPI('/account/getValidation', 'post', payload).then(res => {
-          if(res == '发送成功')
+        let payload = {
+          accountEmail: this.form.getFieldValue('email'),
+          accountName: this.form.getFieldValue('userName')
+        }
+        console.log(payload)
+        fetchAPI('/account/forgetPassword', 'post', payload).then(res => {
+          if(res == '验证码发送成功')
             this.successTip('成功', '验证码已发送')
           else
             this.failureTip('错误', '邮箱已存在')
