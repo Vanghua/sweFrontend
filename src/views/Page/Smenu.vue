@@ -1,13 +1,13 @@
 <!-- 声明为函数式组件只是接受props，不会响应式变化，不加入虚拟DOM -->
 <template functional>
-  <a-sub-menu :key="props.node.key" v-if="props.node.hasChild">
+  <a-sub-menu :key="props.node.key" v-if="props.node.hasChild && props.node.hidden === false">
     <span slot="title" style="float: left;">
       <a-icon :type="props.node.icon"></a-icon>
       <span>{{props.node.title}}</span>
     </span>
     <S-Menu :node="node" v-for="node in props.node.children"></S-Menu>
   </a-sub-menu>
-  <a-menu-item v-else :key="props.node.key">
+  <a-menu-item v-else-if="props.node.hasChild === false && props.node.hidden === false" :key="props.node.key">
     <span style="float: left;">
       <a-icon :type="props.node.icon"/>
       <span>{{props.node.title}}</span>

@@ -20,30 +20,30 @@
         </a-form-item>
         <a-form-item label="真实姓名">
           <a-tooltip :trigger="['focus']" placement="topLeft" title="提示：请输入2-10位汉字组成的真实姓名">
-          <a-input type="text"
-                  size="large"
-                  :placeholder="userRealName"
-                  v-decorator="['realName',{rules: [{ min: 2, max: 10, pattern: new RegExp('^[\u4e00-\u9fa5]{2,10}$','i'), message: '真实姓名输入不合法'}], validateTrigger: 'change'}]">
-          </a-input>
+            <a-input type="text"
+                    size="large"
+                    :placeholder="userRealName"
+                    v-decorator="['realName',{rules: [{ min: 2, max: 10, pattern: new RegExp('^[\u4e00-\u9fa5]{2,10}$','i'), message: '真实姓名输入不合法'}], validateTrigger: 'change'}]">
+            </a-input>
           </a-tooltip>
         </a-form-item>
         <a-form-item label="绑定邮箱">
           <a-tooltip :trigger="['focus']" placement="topLeft" title="提示：请输入126或168或qq邮箱">
-          <a-input type="text"
-                  size="large"
-                  :placeholder="userEmail"
-                  :disabled="true"
-                  v-decorator="['email',{rules: [{ pattern: new RegExp('^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,})$','i'), message: '邮箱输入不合法'}], validateTrigger: 'change'}]">
-          </a-input>
+            <a-input type="text"
+                    size="large"
+                    :placeholder="userEmail"
+                    :disabled="true"
+                    v-decorator="['email',{rules: [{ pattern: new RegExp('^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,})$','i'), message: '邮箱输入不合法'}], validateTrigger: 'change'}]">
+            </a-input>
           </a-tooltip>
         </a-form-item>
         <a-form-item label="联系方式">
           <a-tooltip :trigger="['focus']" placement="topLeft" title="提示：请输入中国大陆11位手机号">
-          <a-input type="text"
-                  size="large"
-                  :placeholder="userPhone"
-                  v-decorator="['phone',{rules: [{ pattern: new RegExp('^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\\d{8}$','i'), message: '手机号输入不合法'}], validateTrigger: 'change'}]">
-          </a-input>
+            <a-input type="text"
+                    size="large"
+                    :placeholder="userPhone"
+                    v-decorator="['phone',{rules: [{ pattern: new RegExp('^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\\d{8}$','i'), message: '手机号输入不合法'}], validateTrigger: 'change'}]">
+            </a-input>
           </a-tooltip>
         </a-form-item>
         <div>

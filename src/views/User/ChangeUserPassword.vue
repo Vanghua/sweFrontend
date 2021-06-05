@@ -6,14 +6,14 @@
         z-index: 999;
         position: absolute;
         border-radius: 15px;">
-      <a-form :form="form" :label-col="{xs: { span: 24 }, sm: { span: 5 }}" :wrapper-col="{ xs: { span: 24 }, sm: { span: 12 },}">
+      <a-form :form="form" @submit="submitAll" :label-col="{xs: { span: 24 }, sm: { span: 5 }}" :wrapper-col="{ xs: { span: 24 }, sm: { span: 12 },}">
         <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px;">修改用户密码</div>
         <a-form-item label="当前密码">
           <a-tooltip :trigger="['focus']" placement="topLeft" title="提示：请输入8-16位的密码必须是数字,字母,字符的组合">
             <a-input-password
                   size="large"
                   placeholder="请输入8-16位的密码必须是数字,字母,字符的组合"
-                  v-decorator="['nowPassword',{rules: [{ min: 8, max: 16, required: true, pattern: new RegExp('^(?![\\d]+$)(?![a-zA-Z]+$)(?![^\\da-zA-Z]+$).{8,16}$','i')}], validateTrigger: 'change'}]">
+                  v-decorator="['nowPassword']">
               <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25);"></a-icon>
             </a-input-password>
           </a-tooltip>
@@ -48,14 +48,63 @@
 </template>
 
 <script>
+import md5 from 'md5'
+import fetchAPI from "@/utils/fetchAPI";
+
 export default {
   name: "ChangeUserPassword",
+  props: {
+    userName: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
        form: this.$form.createForm(this)
     }
   },
   methods: {
+    // 提交修改过的密码
+    submitAll(e) {
+      e.preventDefault(e)
+      let that = this
+      let validateFieldsKey = ['newPassword', 'nowPassword']
+      this.form.validateFields(validateFieldsKey, (err, values) => {
+        let obj = {
+          accountName: that.userName,
+          oldPassword: md5(values.nowPassword),
+          newPassword: md5(values.newPassword)
+        }
+        console.log(md5(values.nowPassword))
+        console.log(md5(values.newPassword))
+        if(!err) {
+          fetchAPI('/account/modifyPasswordWithOldPassword', 'post', obj).then(res => {
+            if(res == '修改成功') {
+              that.$notification.success({
+                message: '成功',
+                description: '修改成功',
+                duration: 4
+              })
+              that.$emit('close')
+            } else {
+              that.$notification['error']({
+                message: '错误',
+                description: '修改失败',
+                duration: 4
+              })
+            }
+          })
+        } else {
+          that.$notification['error']({
+              message: '错误',
+              description: '修改失败',
+              duration: 4
+          })
+        }
+      })
+    },
+
     // 验证用户两次输入的密码是否一致(确认时检验)
     checkUserPassword(rules, values, callback) {
       if(values === this.form.getFieldValue('newPassword')) {

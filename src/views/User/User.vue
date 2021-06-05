@@ -2,17 +2,18 @@
   <div id="test" style="height: 100%; overflow-y: scroll;">
     <!-- 用于信息修改的模态窗口 -->
     <userInfo-Modal v-if="isUserInfo"
-                    @close="isUserInfo = false"
+                    @close="isUserInfo = false; getData()"
                     :userName="userName"
                     :userEmail="'1418406055@qq.com'"
                     :userPhone="userPhone"
                     :userRealName="realName">
     </userInfo-Modal>
     <userPassword-Modal v-if="isUserPassword"
-                        @close="isUserPassword = false">
+                        @close="isUserPassword = false; getData()"
+                        :userName="userName">
     </userPassword-Modal>
     <userEmail-Modal v-if="isUserEmail"
-                     @close="isUserEmail = false"
+                     @close="isUserEmail = false; getData()"
                      :email="'1418406055@qq.com'"
                      :userName="userName">
     </userEmail-Modal>
@@ -20,8 +21,9 @@
     <a-card>
       <div style="float: left; margin-bottom: 16px; font-size: 1.2rem;">用户基本信息</div>
       <a-descriptions bordered :column="{xs: 1, xxl: 2, xl: 2, lg: 2, md: 2, sm: 1}">
+        <a-descriptions-item label="用户类型" :span="2">{{userType}}</a-descriptions-item>
         <a-descriptions-item label="用户名" :span="2">{{userName}}</a-descriptions-item>
-        <a-descriptions-item label="绑定邮箱" :span="2">1418406055@qq.com</a-descriptions-item>
+        <a-descriptions-item label="绑定邮箱" :span="2">{{userEmail}}</a-descriptions-item>
         <a-descriptions-item label="真实姓名" :span="2">{{realName}}</a-descriptions-item>
         <a-descriptions-item label="联系方式" :span="2">{{userPhone}}</a-descriptions-item>
       </a-descriptions>
@@ -58,6 +60,7 @@
 import ChangeUserInfo from "@/views/User/ChangeUserInfo";
 import ChangeUserPassword from "@/views/User/ChangeUserPassword";
 import ChangeUserEmail from "@/views/User/ChangeUserEmail";
+import fetchAPI from "@/utils/fetchAPI";
 
 export default {
   name: "User",
@@ -78,8 +81,10 @@ export default {
       // 是否显示修改邮箱的模态窗口
       isUserEmail: false,
       userName: this.$store.state.user.username,
-      userPhone: '17863025619',
-      realName: '樊华',
+      userPhone: '暂无数据',
+      realName: '暂无数据',
+      userType: '',
+      userEmail: '',
       address: true,
       accept: [
         {
@@ -98,6 +103,12 @@ export default {
           dataIndex: 'acceptAddress',
           title: '收件地址',
           key: 'acceptAddress',
+          align: 'center'
+        },
+        {
+          dataIndex: 'acceptAddressDetail',
+          title: '收件详细地址',
+          key: 'acceptAddressDetail',
           align: 'center'
         },
         {
@@ -126,6 +137,12 @@ export default {
           align: 'center'
         },
         {
+          dataIndex: 'mailAddressDetail',
+          title: '寄件详细地址',
+          key: 'mailAddressDetail',
+          align: 'center'
+        },
+        {
           title: '编辑',
           align: 'center',
           scopedSlots: { customRender: 'edit' }
@@ -138,20 +155,40 @@ export default {
   methods: {
     getData() {
       // 向服务器请求信息更新用户相关信息
-
+      let obj = {
+        accountName: this.$store.state.user.username
+      }
+      let that = this
+      fetchAPI('/account/ui/updateTotalAccountInfo', 'post', obj).then(res => {
+        if(res == JSON.stringify({}))
+          that.$notification['error']({
+            message: '错误',
+            description: '请求用户信息失败',
+            duration: 4
+          })
+        else {
+          res = JSON.parse(res)
+          that.realName = res.trueName
+          that.userPhone = res.telephone
+          that.userType = res.accountType
+          that.userEmail = res.accountEmail
+        }
+      })
       // 测试
       this.acceptData = [
         {
           key: 1,
           acceptName: '吴亦凡',
           acceptPhone: '110',
-          acceptAddress: '东方明珠塔'
+          acceptAddress: '东方明珠塔',
+          acceptAddressDetail: '汤臣一品'
         },
         {
           key: 2,
           acceptName: '郭富城',
           acceptPhone: '111',
-          acceptAddress: '威高广场'
+          acceptAddress: '威高广场',
+          acceptAddressDetail: '环海路1号'
         }
       ]
       this.mailData = [
@@ -159,19 +196,22 @@ export default {
           key: 1,
           mailName: '樊华',
           mailPhone: '120',
-          mailAddress: '威海市文化西路180号'
+          mailAddress: '威海市文化西路180号',
+          mailAddressDetail: '山东大学威海'
         },
         {
           key: 2,
           mailName: '吴彦祖',
           mailPhone: '121',
-          mailAddress: '山东大学'
+          mailAddress: '山东大学',
+          mailAddressDetail: '学6宿舍'
         },
         {
           key: 3,
           mailName: '陈贯西',
           mailPhone: '122',
-          mailAddress: '香港特区'
+          mailAddress: '香港特区',
+          mailAddressDetail: '中寰'
         }
       ]
     },

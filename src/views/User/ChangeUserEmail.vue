@@ -74,7 +74,6 @@ export default {
       let that = this
       let validateFieldsKey = ['newEmail', 'checkNum']
       this.form.validateFields(validateFieldsKey, (err, values) => {
-        console.log(values)
         if(!err) {
           let obj = {
             accountName: that.userName,
@@ -143,9 +142,6 @@ export default {
     #ensureUserPassword {
       float: left;
     }
-    #cancelUserPassword {
-      float: right;
-    }
   }
 
   @media screen and (min-width: 1000px) {
@@ -155,10 +151,6 @@ export default {
       height: 350px;
     }
     #ensureUserPassword {
-      float: left;
-      margin-left: 24px;
-    }
-    #cancelUserPassword {
       float: left;
       margin-left: 24px;
     }

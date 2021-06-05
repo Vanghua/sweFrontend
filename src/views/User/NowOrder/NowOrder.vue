@@ -1,15 +1,10 @@
 <template>
-  <div>这是人事界面2</div>
+  <div>这是订单记录查询界面</div>
 </template>
 
 <script>
 export default {
-  name: "People",
-  data() {
-    return {
-
-    }
-  }
+  name: "NowOrder"
 }
 </script>
 

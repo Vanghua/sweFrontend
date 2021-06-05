@@ -125,7 +125,8 @@ export default {
           title: router.meta.title,
           children: [],
           hasChild: false,
-          icon: this.selectIcon(router.meta.permission)
+          icon: router.meta.icon,
+          hidden: router.meta.hidden
         }
       }
       else {
@@ -138,33 +139,12 @@ export default {
           title: router.meta.title,
           children: children,
           hasChild: true,
-          icon: this.selectIcon(router.meta.permission)
+          icon: router.meta.icon,
+          hidden: router.meta.hidden
         }
       }
     },
-    // 递归时获取路由图标
-    selectIcon(role) {
-      for(var i = 0; i < role.length; i++)
-        // 用户
-        if(role[i] == 'user') {
-          return 'user'
-          // 人事
-        } else if(role[i] == 'people') {
-          return 'team'
-          // 财务
-        } else if(role[i] == 'value') {
-          return 'credit-card'
-          // 订单
-        } else if(role[i] == 'order') {
-          return 'file'
-          // 调度
-        } else if(role[i] == 'assign') {
-          return 'control'
-          // 仓库
-        } else if(role[i] == 'warehouse') {
-          return 'shop'
-        }
-    },
+
     // 点击菜单进行路由跳转
     jump(target) {
       console.log(target.key)
