@@ -2,7 +2,11 @@
   <div style="height: 100%; position:relative;">
     <!-- 左边的菜单栏 -->
     <div v-show="isShow" :style="{float: 'left', width: menuWidth, height: '100%', minWidth: '100px', position: menuPosition, zIndex: 3}">
-      <a-menu v-show="isShow" theme="dark" mode="inline" :inlineCollapsed="collapsed" :defaultSelectedKeys="['User']"
+      <a-menu v-show="isShow"
+              theme="dark"
+              mode="inline"
+              :inlineCollapsed="collapsed"
+              :default-open-keys="['PageViewUser']"
               style="height: 100%; min-width: 100px; " @click="jump">
         <S-Menu :node="node" v-for="node in nodes"></S-Menu>
       </a-menu>

@@ -2,8 +2,9 @@ module.exports = {
     devServer: {
         proxy: {
             '/api': {
-                target: 'http://39.96.175.246:8051',
-                // target: 'http://localhost:8081',
+                // 服务器
+                // target: 'http://39.96.175.246:8051',
+                target: 'http://localhost:8081',
                 // 樊华
                 // target: 'http://n2900b3853.imdo.co/',
                 // 朱胤璘

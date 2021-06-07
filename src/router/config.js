@@ -63,10 +63,22 @@ export const asyncRoutes = [
             meta: { title: '订单进度查询', keepalive: true, permission: ['all','user'], hidden: false, icon: 'contacts' },
           },
           {
+            path: '/Page/User/Ask/Process',
+            name: 'Process',
+            component: () => import('../views/User/Ask/Process'),
+            meta: { title: '订单进度详情', keepalive: true, permission: ['all','user'], hidden: true, icon: 'contacts' },
+          },
+          {
             path: '/Page/User/NowOrder/NowOrder',
             name: 'NowOrder',
             component: () => import('../views/User/NowOrder/NowOrder'),
             meta: { title: '订单查询', keepalive: true, permission: ['all','user'], hidden: false, icon: 'book' },
+          },
+          {
+            path: '/Page/User/NowOrder/PayOrder',
+            name: 'PayOrder',
+            component: () => import('../views/User/NowOrder/PayOrder'),
+            meta: { title: '订单支付', keepalive: true, permission: ['all','user'], hidden: true, icon: 'book' },
           }
         ]
       },
@@ -94,7 +106,13 @@ export const asyncRoutes = [
             path: '/Page/Order/Control',
             name: 'Order',
             component: () => import('../views/Order/Order'),
-            meta: { title: '订单管理', keepalive: true, permission: ['all','order'], hidden: false, icon: 'file' },
+            meta: { title: '订单审核', keepalive: true, permission: ['all','order'], hidden: false, icon: 'file' },
+          },
+          {
+            path: '/Page/Order/Check',
+            name: 'Check',
+            component: () => import('../views/Order/Check'),
+            meta: { title: '订单审核详情', keepalive: true, permission: ['all','order'], hidden: true, icon: 'file' },
           }
         ]
       },
@@ -123,6 +141,30 @@ export const asyncRoutes = [
             name: 'WareHouse',
             component: () => import('../views/WareHouse/WareHouse'),
             meta: { title: '仓库管理', keepalive: true, permission: ['all','warehouse'], hidden: false, icon: 'shop' },
+          },
+          {
+            path: '/Page/WareHouse/WareHouseDetail',
+            name: 'WareHouseDetail',
+            component: () => import('../views/WareHouse/WareHouseDetail/WareHouseDetail'),
+            meta: { title: '仓库详情', keepalive: true, permission: ['all','warehouse'], hidden: true, icon: 'shop' },
+          },
+          {
+            path: '/Page/WareHouse/Shelf',
+            name: 'Shelf',
+            component: () => import('../views/WareHouse/WareHouseDetail/Shelf'),
+            meta: { title: '货架详情', keepalive: true, permission: ['all','warehouse'], hidden: true, icon: 'shop' },
+          },
+          {
+            path: '/Page/WareHouse/CreateWareHouse',
+            name: 'CreateWareHouse',
+            component: () => import('../views/WareHouse/CreateWareHouse'),
+            meta: { title: '创建仓库', keepalive: true, permission: ['all'], hidden: false, icon: 'plus-circle' },
+          },
+          {
+            path: '/Page/WareHouse/DeleteWareHouse',
+            name: 'DeleteWareHouse',
+            component: () => import('../views/WareHouse/DeleteWareHouse'),
+            meta: { title: '删除仓库', keepalive: true, permission: ['all'], hidden: false, icon: 'minus-circle' },
           }
         ]
       },

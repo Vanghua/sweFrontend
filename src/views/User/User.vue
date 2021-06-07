@@ -4,7 +4,7 @@
     <userInfo-Modal v-if="isUserInfo"
                     @close="isUserInfo = false; getData()"
                     :userName="userName"
-                    :userEmail="'1418406055@qq.com'"
+                    :userEmail="userEmail"
                     :userPhone="userPhone"
                     :userRealName="realName">
     </userInfo-Modal>
@@ -14,7 +14,7 @@
     </userPassword-Modal>
     <userEmail-Modal v-if="isUserEmail"
                      @close="isUserEmail = false; getData()"
-                     :email="'1418406055@qq.com'"
+                     :email="userEmail"
                      :userName="userName">
     </userEmail-Modal>
 

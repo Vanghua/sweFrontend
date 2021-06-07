@@ -132,6 +132,7 @@ export default {
               description: '保存成功',
               duration: 4
             })
+            console.log(values.address)
             that.$router.push({
               name: 'Send',
               params: {

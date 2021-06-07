@@ -15,17 +15,15 @@
       </span>
     </a-card>
     <a-card style="margin-top: 44px; font-weight: bold;">
-      <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px;">填写物品信息</div>
-      <a-form :form="form" :label-col="{xs: { span: 24 }, sm: { span: 4 }}" :wrapper-col="{ xs: { span: 24 }, sm: { span: 16 },}" style="display: block;">
-        <a-form-item label="物品类别">
-          <a-select default-value="普通">
-            <a-select-option value="生鲜">生鲜</a-select-option>
-            <a-select-option value="普通">普通</a-select-option>
-            <a-select-option value="慢快递">慢快递</a-select-option>
-          </a-select>
-        </a-form-item>
-        <a-button type="primary" >提交</a-button>
-      </a-form>
+      <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px; display: flex;">填写物品信息</div>
+      <div style="display: flex; margin-bottom: 16px; align-items: center;">
+        <a-select default-value="普通" style="width: 300px;">
+          <a-select-option value="急件">急件</a-select-option>
+          <a-select-option value="普通">普通</a-select-option>
+          <a-select-option value="慢件">慢件</a-select-option>
+        </a-select>
+      </div>
+      <a-button type="primary" style="float: left;">提交</a-button>
     </a-card>
   </div>
 </template>
