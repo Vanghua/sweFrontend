@@ -1,6 +1,20 @@
 <template>
   <div style="height: 100%; overflow-y: scroll;">
     <a-card style="font-weight: bold; font-size: 1.2rem;"><div style="float: left;">订单审核</div></a-card>
+    <a-card style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px;">
+      <div style="overflow: hidden;">
+        <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px; float: left;">待审核订单查询</div>
+        <a-input-search addon-before="按名称搜索"
+                    enter-button="Search"
+                    placeholder="请输入货物名称"
+                    @search=""/>
+         <a-input-search addon-before="按编号搜索"
+                    enter-button="Search"
+                    placeholder="请输入订单编号"
+                    @search="" style="margin-top: 16px;"/>
+        <a-button  style="float: left; margin-top: 16px;" @click=""><a-icon type="sync"/>显示所有待审核订单</a-button>
+      </div>
+    </a-card>
     <a-card v-for="item in items"
             style="margin-top: 16px; cursor: pointer;"
             @click="$router.push({name: 'Check'})">

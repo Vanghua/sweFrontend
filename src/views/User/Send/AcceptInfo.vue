@@ -98,7 +98,12 @@ export default {
       acceptInfo: {},
       mailInfo: {},
       // 控制自动填写模态窗口是否显示
-      isAuto: false
+      isAuto: false,
+      // 收件人地址的经纬度
+      point: {
+        lng: '',
+        lat: ''
+      }
     }
   },
   methods: {
@@ -132,7 +137,6 @@ export default {
               description: '保存成功',
               duration: 4
             })
-            console.log(values.address)
             that.$router.push({
               name: 'Send',
               params: {
@@ -140,7 +144,8 @@ export default {
                   name: values.name,
                   phone: values.phone,
                   address: values.address,
-                  addressDetail: values.addressDetail
+                  addressDetail: values.addressDetail,
+                  point: that.point
                 },
                 mailInfo: that.mailInfo
               }
@@ -198,7 +203,7 @@ export default {
 
       var myValue;
       ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
-      var _value = e.item.value;
+        var _value = e.item.value;
         myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
         G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
         setPlace();
@@ -211,6 +216,9 @@ export default {
           var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
           that.map.centerAndZoom(pp, 18);
           that.map.addOverlay(new BMap.Marker(pp));    //添加标注
+          // 获取地点经纬度
+          that.point.lng = pp.lng
+          that.point.lat = pp.lat
         }
         var local = new BMap.LocalSearch(that.map, { //智能搜索
           onSearchComplete: myFun

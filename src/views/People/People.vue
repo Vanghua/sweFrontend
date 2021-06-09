@@ -1,5 +1,5 @@
 <template>
-  <div>这是人事界面2</div>
+  <div></div>
 </template>
 
 <script>
@@ -7,7 +7,7 @@ export default {
   name: "People",
   data() {
     return {
-
+      people: []
     }
   }
 }

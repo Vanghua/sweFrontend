@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;">
+  <div style="height: 100%; overflow-y: scroll;">
     <a-card style="height: 130px; display: flex; overflow-x: scroll;">
       <a-steps :status="state" v-model="current">
         <a-step v-for="step in steps" :title="step.title" :description="step.description" :disabled="true"></a-step>

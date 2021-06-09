@@ -23,7 +23,7 @@
           <a-select-option value="慢件">慢件</a-select-option>
         </a-select>
       </div>
-      <a-button type="primary" style="float: left;">提交</a-button>
+      <a-button type="primary" style="float: left;" @click="handleSubmit">提交</a-button>
     </a-card>
   </div>
 </template>
@@ -75,6 +75,11 @@ export default {
       form: this.$form.createForm(this)
     }
   },
+  methods: {
+    handleSubmit() {
+
+    },
+  }
 }
 </script>
 

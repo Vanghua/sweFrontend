@@ -98,7 +98,12 @@ export default {
       mailInfo: {},
       acceptInfo: {},
       // 是否启用自动填写
-      isAuto: false
+      isAuto: false,
+      // 地点坐标
+      point: {
+        lng: '',
+        lat: ''
+      }
     }
   },
   methods: {
@@ -139,7 +144,8 @@ export default {
                   name: values.name,
                   phone: values.phone,
                   address: values.address,
-                  addressDetail: values.addressDetail
+                  addressDetail: values.addressDetail,
+                  point: that.point
                 },
                 acceptInfo: that.acceptInfo
               }
@@ -210,6 +216,9 @@ export default {
           var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
           that.map.centerAndZoom(pp, 18);
           that.map.addOverlay(new BMap.Marker(pp));    //添加标注
+          // 获取地点经纬度
+          that.point.lng = pp.lng
+          that.point.lat = pp.lat
         }
         var local = new BMap.LocalSearch(that.map, { //智能搜索
           onSearchComplete: myFun

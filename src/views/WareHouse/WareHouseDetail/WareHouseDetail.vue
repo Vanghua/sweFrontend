@@ -1,6 +1,7 @@
 <template>
   <div style="height: 100%; overflow-y: scroll;">
-    <add-Modal v-if="isAdd" @close="isAdd = false, getData()" :houseId="$route.params.houseInfo.warehouse_id"></add-Modal>
+    <add-Modal v-if="isAdd" @close="isAdd = false, getData()" :houseId="$route.params.houseInfo.warehouse_id" />
+    <edt-Modal  v-if="isEdit" @close="isEdit = false, getData()" :shelfObj="shelfObj"/>
 
     <a-card>
       <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px; float: left;">仓库基本信息</div>
@@ -19,12 +20,14 @@
     <a-card style="margin-top: 24px;">
       <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px; float: left;">货架信息</div>
       <a-table :columns="columns" :dataSource="shelfData" bordered :pagination="false" :scroll="{x: 800}">
-        <div slot="edit">
-          <a-button type="primary" style="margin-right: 16px;"><a-icon type="edit"></a-icon>编辑</a-button>
-          <a-button type="danger"><a-icon type="minus"></a-icon>删除</a-button>
+        <div slot="edit" slot-scope="text, record, index">
+          <a-button type="primary" style="margin-right: 16px;" @click="shelfObj = record, isEdit = true"><a-icon type="edit"></a-icon>编辑</a-button>
+          <a-popconfirm title="确认要删除吗" okText="确认" cancelText="取消" @confirm="">
+            <a-button type="danger"><a-icon type="minus"></a-icon>删除</a-button>
+          </a-popconfirm>
         </div>
-        <div slot="show">
-          <a-button type="primary" @click="$router.push({name: 'Shelf', params: {houseInfo: houseInfo}})"><a-icon type="search"></a-icon>查看</a-button>
+        <div slot="show" slot-scope="text, record, index">
+          <a-button type="primary" @click="$router.push({name: 'Shelf', params: {houseInfo: houseInfo, shelfInfo: record}})"><a-icon type="search"></a-icon>查看</a-button>
         </div>
       </a-table>
       <a-button type="primary" style="float: left; margin-top: 16px;" @click="isAdd = true"><a-icon type="edit"/>添加货架</a-button>
@@ -36,10 +39,13 @@
 <script>
 import fetchAPI from "@/utils/fetchAPI";
 import AddShelf from "@/views/WareHouse/WareHouseDetail/AddShelf";
+import EditShelf from "@/views/WareHouse/WareHouseDetail/EditShelf";
+
 export default {
   name: "WareHouseDetail",
   components: {
-    'add-Modal': AddShelf
+    'add-Modal': AddShelf,
+    'edt-Modal': EditShelf
   },
   mounted() {
     this.houseInfo = this.$route.params.houseInfo
@@ -49,6 +55,10 @@ export default {
     return {
       // 是否展示添加货架模态窗口
       isAdd: false,
+      // 是否展示编辑货架
+      isEdit: false,
+      // 当前点击的货架的信息
+      shelfObj: {},
       shelf: [],
       columns: [
         {
@@ -81,6 +91,8 @@ export default {
     }
   },
   methods: {
+
+    // 加载数据
     getData() {
       let obj = {
         goodInfo: {},

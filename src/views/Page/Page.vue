@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%; position:relative;">
     <!-- 左边的菜单栏 -->
-    <div v-show="isShow" :style="{float: 'left', width: menuWidth, height: '100%', minWidth: '100px', position: menuPosition, zIndex: 3}">
+    <div v-show="isShow" :style="{float: 'left', width: menuWidth, height: '100%', minWidth: '100px', position: menuPosition, zIndex: 3, overflowY: isOverY, overflow: isHidden}">
       <a-menu v-show="isShow"
               theme="dark"
               mode="inline"
@@ -63,7 +63,9 @@ export default {
       menuWidth: '256px',
       rightWidth: 'calc(100% - 256px)',
       copyRight: 'Copyrigt  2021  山东大学(威海) 19计算机(中澳) 黄皓 朱胤璘 赵玉淋 樊华',
-      nodes: this.dfsRouter(this.$store.state.permission.addRoutes[0]).children
+      nodes: this.dfsRouter(this.$store.state.permission.addRoutes[0]).children,
+      isOverY: 'None',
+      isHidden: 'hidden'
     }
   },
   methods: {
@@ -71,11 +73,11 @@ export default {
     Logout() {
       if(localStorage.getItem('userInfo') != null)
         localStorage.removeItem('userInfo')
-      // 清空Vuex中的数据
-      this.$store.commit('userClear')
-      this.$store.commit('permissionClear')
-      // 跳转回登录界面
-      this.$router.push({name: 'Login'})
+        // 清空Vuex中的数据
+        this.$store.commit('userClear')
+        this.$store.commit('permissionClear')
+        // 跳转回登录界面
+        this.$router.push({name: 'Login'})
     },
     // 菜单折叠
     toggleCollapsed() {
@@ -106,12 +108,14 @@ export default {
     // 适配手机
     adpatPhone() {
       if(document.body.clientWidth < 1000) {
-      // 如果是屏幕宽度小于1000，那么不显示侧边栏，此时右边内容栏和信息栏的宽度应该是100%
-      this.rightWidth = '100%'
-      this.isShow = false
-      this.menuPosition = 'absolute'
-      this.copyRight = 'Copyrigt  2021  山东大学(威海)'
-    }
+        // 如果是屏幕宽度小于1000，那么不显示侧边栏，此时右边内容栏和信息栏的宽度应该是100%
+        this.rightWidth = '100%'
+        this.isShow = false
+        this.menuPosition = 'absolute'
+        this.copyRight = 'Copyrigt  2021  山东大学(威海)'
+        this.isOverY = 'scroll'
+        this.isHidden = 'None'
+      }
     },
     // 加载基础数据
     getData() {

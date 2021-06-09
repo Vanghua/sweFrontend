@@ -2,6 +2,20 @@
   <div style="height: 100%; overflow-y: scroll;">
     <a-tabs default-active-key="1" @change="" style="font-weight: bold;">
       <a-tab-pane key="1" tab="历史订单">
+        <a-card style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px;">
+          <div style="overflow: hidden;">
+            <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px; float: left;">历史订单查询</div>
+            <a-input-search addon-before="按名称搜索"
+                        enter-button="Search"
+                        placeholder="请输入货物名称"
+                        @search=""/>
+             <a-input-search addon-before="按编号搜索"
+                        enter-button="Search"
+                        placeholder="请输入订单编号"
+                        @search="" style="margin-top: 16px;"/>
+            <a-button  style="float: left; margin-top: 16px;" @click=""><a-icon type="sync"/>显示所有历史订单</a-button>
+          </div>
+        </a-card>
         <a-card v-for="order in historyOrders">
           <a-row type="flex" justify="start" >
             <a-col flex="80px" style="overflow: hidden;">
@@ -28,6 +42,20 @@
         <a-button type="primary" style="margin-top: 24px;">点击加载更多</a-button>
       </a-tab-pane>
       <a-tab-pane key="2" tab="审核中订单">
+        <a-card style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px;">
+          <div style="overflow: hidden;">
+            <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px; float: left;">审核中订单查询</div>
+            <a-input-search addon-before="按名称搜索"
+                        enter-button="Search"
+                        placeholder="请输入货物名称"
+                        @search=""/>
+             <a-input-search addon-before="按编号搜索"
+                        enter-button="Search"
+                        placeholder="请输入订单编号"
+                        @search="" style="margin-top: 16px;"/>
+            <a-button  style="float: left; margin-top: 16px;" @click=""><a-icon type="sync"/>显示所有审核中订单</a-button>
+          </div>
+        </a-card>
         <a-card v-for="order in checkingOrders">
           <a-row type="flex" justify="start" >
             <a-col flex="80px" style="overflow: hidden;">
@@ -53,6 +81,20 @@
         </a-card>
       </a-tab-pane>
       <a-tab-pane key="3" tab="已审核中代付款订单">
+        <a-card style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px;">
+          <div style="overflow: hidden;">
+            <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px; float: left;">未付款订单查询</div>
+            <a-input-search addon-before="按名称搜索"
+                        enter-button="Search"
+                        placeholder="请输入货物名称"
+                        @search=""/>
+             <a-input-search addon-before="按编号搜索"
+                        enter-button="Search"
+                        placeholder="请输入订单编号"
+                        @search="" style="margin-top: 16px;"/>
+            <a-button  style="float: left; margin-top: 16px;" @click=""><a-icon type="sync"/>显示所有未付款订单</a-button>
+          </div>
+        </a-card>
         <a-card v-for="order in waitingOrders"
                 @click="$router.push({name: 'PayOrder', params: {name: order.name, time: order.time, cost: order.cost}})"
                 style="cursor: pointer;">
