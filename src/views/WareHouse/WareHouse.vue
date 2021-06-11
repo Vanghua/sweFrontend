@@ -24,7 +24,7 @@
     <a-pagination style="float: right; margin-top: 24px;"
                   v-model="pageNum"
                   :defaultPageSize="10"
-                  :total="12"
+                  :total="total"
                   @change="handleChange"
                   v-if="isPage"/>
   </a-card>

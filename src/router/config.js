@@ -23,20 +23,20 @@ export const asyncRoutes = [
     path: '/Page',
     name: 'Page',
     component: Page,
-    meta: { title: '页面', keepalive: true, permission: ['all','value','user','people','order','trans','assign','warehouse'] },
+    meta: { title: '页面', keepalive: true, permission: ['all','financial','user','people','order','trans','assign','warehouse'] },
     redirect: '/Page/User/Home',
     children: [
       {
         path: '/Page/PageViewUser',
         name: 'PageViewUser',
         component: PageView,
-        meta: { title: '我的', keepalive: true, permission: ['all','user','people','value','order','trans','assign','warehouse'], hidden: false, icon: 'home'},
+        meta: { title: '我的', keepalive: true, permission: ['all','user','people','financial','order','trans','assign','warehouse'], hidden: false, icon: 'home'},
         children: [
           {
             path: '/Page/User/Home',
             name: 'User',
             component: () => import('../views/User/User'),
-            meta: { title: '个人主页', keepalive: true, permission: ['all','user','people','value','order','trans','assign','warehouse'], hidden: false, icon: 'user' },
+            meta: { title: '个人主页', keepalive: true, permission: ['all','user','people','financial','order','trans','assign','warehouse'], hidden: false, icon: 'user' },
           },
           {
             path: '/Page/User/Send',
@@ -120,13 +120,13 @@ export const asyncRoutes = [
         path: '/Page/PageViewValue',
         name: 'PageViewValue',
         component: PageView,
-        meta: { title: '财务管理', keepalive: true, permission: ['all','value'], hidden: false, icon: 'credit-card' },
+        meta: { title: '财务管理', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'credit-card' },
         children: [
           {
             path: '/Page/Value/Control',
             name: 'Value',
             component: () => import('../views/Value/Value'),
-            meta: { title: '财务管理', keepalive: true, permission: ['all','value'], hidden: false, icon: 'credit-card' },
+            meta: { title: '财务管理', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'credit-card' },
           }
         ]
       },

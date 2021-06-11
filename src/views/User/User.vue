@@ -6,17 +6,16 @@
                     :userName="userName"
                     :userEmail="userEmail"
                     :userPhone="userPhone"
-                    :userRealName="realName">
-    </userInfo-Modal>
+                    :userRealName="realName"/>
     <userPassword-Modal v-if="isUserPassword"
                         @close="isUserPassword = false; getData()"
-                        :userName="userName">
-    </userPassword-Modal>
+                        :userName="userName" />
     <userEmail-Modal v-if="isUserEmail"
                      @close="isUserEmail = false; getData()"
                      :email="userEmail"
-                     :userName="userName">
-    </userEmail-Modal>
+                     :userName="userName" />
+    <sendInfo-Modal v-if="isSendInfo"
+                    @close="isSendInfo = false, getData" :title="title" />
 
     <a-card>
       <div style="float: left; margin-bottom: 16px; font-size: 1.2rem;">用户基本信息</div>
@@ -41,7 +40,7 @@
         </div>
       </a-table>
       <div style="overflow: hidden;">
-        <a-button type="primary" style="float: left; margin-top: 16px;"><a-icon type="plus"></a-icon>添加</a-button>
+        <a-button type="primary" style="float: left; margin-top: 16px;" @click="title = '收件人信息'; isSendInfo = true;"><a-icon type="plus"></a-icon>添加</a-button>
       </div>
       <a-table style="margin-top: 16px;" :columns="mail" :dataSource="mailData" bordered :pagination="false" :scroll="{x: 800}">
         <div slot="edit">
@@ -50,7 +49,7 @@
         </div>
       </a-table>
       <div style="overflow: hidden;">
-        <a-button type="primary" style="float: left; margin-top: 16px;"><a-icon type="plus"></a-icon>添加</a-button>
+        <a-button type="primary" style="float: left; margin-top: 16px;"  @click="title = '寄件人信息'; isSendInfo = true;"><a-icon type="plus"></a-icon>添加</a-button>
       </div>
     </a-card>
   </div>
@@ -60,6 +59,7 @@
 import ChangeUserInfo from "@/views/User/ChangeUserInfo";
 import ChangeUserPassword from "@/views/User/ChangeUserPassword";
 import ChangeUserEmail from "@/views/User/ChangeUserEmail";
+import AddSendInfo from "@/views/User/AddSendInfo";
 import fetchAPI from "@/utils/fetchAPI";
 
 export default {
@@ -67,7 +67,8 @@ export default {
   components: {
     'userInfo-Modal': ChangeUserInfo,
     'userPassword-Modal': ChangeUserPassword,
-    'userEmail-Modal': ChangeUserEmail
+    'userEmail-Modal': ChangeUserEmail,
+    'sendInfo-Modal': AddSendInfo
   },
   created() {
     this.getData()
@@ -80,12 +81,17 @@ export default {
       isUserPassword: false,
       // 是否显示修改邮箱的模态窗口
       isUserEmail: false,
+      // 是否显示增加收件人，寄件人信息的窗口
+      isSendInfo: false,
+      // 进入填写寄件人收件人信息模态窗口时的标题
+      sendTitle: '',
       userName: this.$store.state.user.username,
       userPhone: '暂无数据',
       realName: '暂无数据',
       userType: '',
       userEmail: '',
       address: true,
+      // 表头信息
       accept: [
         {
           dataIndex: 'acceptName',
@@ -148,6 +154,7 @@ export default {
           scopedSlots: { customRender: 'edit' }
         }
       ],
+      // 接收数据库信息
       acceptData: [],
       mailData: []
     }

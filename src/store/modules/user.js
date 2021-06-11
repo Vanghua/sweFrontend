@@ -98,8 +98,8 @@ export default {
                 case 'people':
                     context.commit('setAddRoutes',routesSelect(asyncRoutes,'people'))
                     break
-                case 'value':
-                    context.commit('setAddRoutes',routesSelect(asyncRoutes,'value'))
+                case 'financial':
+                    context.commit('setAddRoutes',routesSelect(asyncRoutes,'financial'))
                     break
                 case 'order':
                     context.commit('setAddRoutes',routesSelect(asyncRoutes,'order'))

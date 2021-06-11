@@ -23,12 +23,17 @@
           <a-select-option value="慢件">慢件</a-select-option>
         </a-select>
       </div>
+      <div style="overflow: hidden; display: flex;" :value="goodType">
+        <a-input addon-before="货物名称" v-model="goodName" style="margin-bottom: 16px; width: 300px;"/>
+      </div>
       <a-button type="primary" style="float: left;" @click="handleSubmit">提交</a-button>
     </a-card>
   </div>
 </template>
 
 <script>
+import fetchAPI from "@/utils/fetchAPI";
+
 export default {
   name: "Send",
   mounted() {
@@ -72,12 +77,72 @@ export default {
       acceptInfo: {},
       // 寄件人信息
       mailInfo: {},
-      form: this.$form.createForm(this)
+      form: this.$form.createForm(this),
+      // 货物名称
+      goodName: '',
+      // 货物种类
+      goodType: '普通'
     }
   },
   methods: {
     handleSubmit() {
-
+      console.log(this.acceptInfo)
+      if(this.acceptInfo === undefined)
+        this.$notification['error']({
+            message: '失败',
+            description: '收件人信息未填写',
+            duration: 4
+        })
+      else if(this.mailInfo === undefined)
+        this.$notification['error']({
+            message: '失败',
+            description: '寄件人信息未填写',
+            duration: 4
+        })
+      else if(this.goodName === '')
+        this.$notification['error']({
+            message: '失败',
+            description: '货物名称未填写',
+            duration: 4
+        })
+      else {
+        let that = this
+        let obj = {
+          // 发起人
+          accountName: this.mailInfo.name,
+          // 货物信息
+          ordersName: this.goodName,
+          userPriority: this.goodType === '急件' ? 3 : this.goodType === '普通' ? 2 : 1,
+          // 收件人信息
+          receiverName: this.acceptInfo.name,
+          receiverPhone: this.acceptInfo.phone,
+          receiverAddress: this.acceptInfo.address,
+          receiverDetailAddress: this.acceptInfo.addressDetail,
+          receiverLng: this.acceptInfo.point.lng,
+          receiverLat: this.acceptInfo.point.lat,
+          // 寄件人信息
+          senderName: this.mailInfo.name,
+          senderPhone: this.mailInfo.phone,
+          senderAddress: this.mailInfo.address,
+          senderDetailAddress: this.mailInfo.addressDetail,
+          senderLng: this.mailInfo.point.lng,
+          senderLat: this.mailInfo.point.lat
+        }
+        console.log(obj)
+        fetchAPI('/orders/createOrders', 'post', obj).then(res => {
+          if(res === '成功')
+            this.$notification.success({
+              message: '成功',
+              description: '订单已经成功生成'
+            })
+          else
+            this.$notification['error']({
+                message: '失败',
+                description: '订单创建失败',
+                duration: 4
+            })
+        })
+      }
     },
   }
 }

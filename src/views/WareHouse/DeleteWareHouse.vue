@@ -26,7 +26,7 @@
     <a-pagination style="float: right; margin-top: 24px;"
                   v-model="pageNum"
                   :defaultPageSize="10"
-                  :total="12"
+                  :total="total"
                   @change="handleChange"/>
   </div>
 </template>
@@ -43,7 +43,8 @@ export default {
     return {
       pageNum: 1,
       houses: [],
-      isPage: true
+      isPage: true,
+      total: 0
     }
   },
   methods: {
@@ -103,21 +104,29 @@ export default {
         pageCount: 10
       }
       let that = this
-      fetchAPI('/warehouse/warehouseQueryAll', 'post', obj).then(res => {
-        that.houses = JSON.parse(res)
-        for(var i = 0; i < that.houses.length; i++) {
-          switch(that.houses[i].warehouse_type) {
-            case 1:
-              that.houses[i].warehouse_type = '接收站'
-              break
-            case 2:
-              that.houses[i].warehouse_type = '存储仓库'
-              break
-            case 3:
-              that.houses[i].warehouse_type = '中转站'
-              break
+      new Promise((resolve, reject) => {
+        // 请求仓库总数量
+        fetchAPI('/warehouse/warehouseNumQuery', 'post', obj).then(res => {
+          that.total = res
+          resolve()
+        })
+      }).then(() => {
+        fetchAPI('/warehouse/warehouseQueryAll', 'post', obj).then(res => {
+          that.houses = JSON.parse(res)
+          for (var i = 0; i < that.houses.length; i++) {
+            switch (that.houses[i].warehouse_type) {
+              case 1:
+                that.houses[i].warehouse_type = '接收站'
+                break
+              case 2:
+                that.houses[i].warehouse_type = '存储仓库'
+                break
+              case 3:
+                that.houses[i].warehouse_type = '中转站'
+                break
+            }
           }
-        }
+        })
       })
     },
 
