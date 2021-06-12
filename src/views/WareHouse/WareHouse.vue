@@ -53,7 +53,7 @@ export default {
       // 是否显示查询仓库搜索框(只有全局管理员有这个权限)
       isShowSearch: false,
       // 是否显示页码
-      isPage: true
+      isPage: this.$store.state.user.role == 'all' ? true : false
     }
   },
   methods: {
@@ -100,48 +100,51 @@ export default {
 
     // 获取数据
     getData(page) {
-      this.isPage = true
-      let obj = {
-        goodInfo: {},
-        warehouseInfo: {},
-        pageNum: page,
-        pageCount: 10
-      }
-      let that = this
-      new Promise((resolve, reject) => {
-        // 请求仓库总数量
-        fetchAPI('/warehouse/warehouseNumQuery', 'post', obj).then(res => {
-          that.total = res
-          resolve()
-        })
-      }).then(() => {
-        // 请求仓库具体数据
-        fetchAPI('/warehouse/warehouseQueryAll', 'post', obj).then(res => {
-          that.houses = JSON.parse(res)
-          // 先删除旧标记
-          if(that.overlay.length)
-            for(var i = 0; i < that.overlay.length; i++)
-              that.map.removeOverlay(that.overlay[i])
-          // 在地图上添加仓库标记
-          let overlays = []
-          for(var i = 0; i < that.houses.length; i++) {
-            overlays.push(new BMap.Marker(new BMap.Point(that.houses[i].warehouse_lng,that.houses[i].warehouse_lat)))
-            that.map.addOverlay(overlays[i])
-            switch(that.houses[i].warehouse_type) {
-              case 1:
-                that.houses[i].warehouse_type = '接收站'
-                break
-              case 2:
-                that.houses[i].warehouse_type = '存储仓库'
-                break
-              case 3:
-                that.houses[i].warehouse_type = '中转站'
-                break
+      // 如果当前是最高管理员权限，那么显示所有仓库
+      if(this.$store.state.user.role == 'all') {
+        this.isPage = true
+        let obj = {
+          goodInfo: {},
+          warehouseInfo: {},
+          pageNum: page,
+          pageCount: 10
+        }
+        let that = this
+        new Promise((resolve, reject) => {
+          // 请求仓库总数量
+          fetchAPI('/warehouse/warehouseNumQuery', 'post', obj).then(res => {
+            that.total = res
+            resolve()
+          })
+        }).then(() => {
+          // 请求仓库具体数据
+          fetchAPI('/warehouse/warehouseQueryAll', 'post', obj).then(res => {
+            that.houses = JSON.parse(res)
+            // 先删除旧标记
+            if (that.overlay.length)
+              for (var i = 0; i < that.overlay.length; i++)
+                that.map.removeOverlay(that.overlay[i])
+            // 在地图上添加仓库标记
+            let overlays = []
+            for (var i = 0; i < that.houses.length; i++) {
+              overlays.push(new BMap.Marker(new BMap.Point(that.houses[i].warehouse_lng, that.houses[i].warehouse_lat)))
+              that.map.addOverlay(overlays[i])
+              switch (that.houses[i].warehouse_type) {
+                case 1:
+                  that.houses[i].warehouse_type = '接收站'
+                  break
+                case 2:
+                  that.houses[i].warehouse_type = '存储仓库'
+                  break
+                case 3:
+                  that.houses[i].warehouse_type = '中转站'
+                  break
+              }
             }
-          }
-          that.overlay = overlays
+            that.overlay = overlays
+          })
         })
-      })
+      }
     },
 
     // 初始化地图

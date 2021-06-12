@@ -61,19 +61,37 @@ import normalize from "@/utils/normalize";
 import fetchAPI from "@/utils/fetchAPI";
 
 export default {
-  name: "AddSendInfo",
+  name: "ChangeSendInfo",
   mounted() {
     // 数据规范化
     for(var i = 0; i < city.length; i++)
       this.options.push(normalize.normalize(city[i]))
     // 初始化地图
     this.initMap()
-    // 给表单三级级联选择城市项目赋初值
-    this.form.setFieldsValue({'address': ['山东省', '威海市', '环翠区']})
+    // 赋初始值
+    if(this.title == '收件人信息修改')
+      this.form.setFieldsValue({
+        'address': this.sendInfo.acceptAddress,
+        'addressDetail': this.sendInfo.acceptAddressDetail,
+        'name': this.sendInfo.acceptName,
+        'phone': this.sendInfo.acceptPhone
+      })
+    else
+      this.form.setFieldsValue({
+        'address': this.sendInfo.mailAddress,
+        'addressDetail': this.sendInfo.mailAddressDetail,
+        'name': this.sendInfo.mailName,
+        'phone': this.sendInfo.mailPhone
+      })
+
   },
   props: {
     title: {
       type: String,
+      required: true
+    },
+    sendInfo: {
+      type: Object,
       required: true
     }
   },
@@ -102,25 +120,24 @@ export default {
        this.form.validateFields(validateFieldsKey, (err, values) => {
         if(!err) {
           let obj =  {
-            accountName: that.$store.state.user.username,
-            freqType: that.title,
+            freqId: that.sendInfo.key,
             freqName: values.name,
             freqPhone: values.phone,
             freqAddress: values.address,
             freqDetailAddress: values.addressDetail
           }
-          fetchAPI('/orders/createFreqAddress','post',obj).then(res => {
+          fetchAPI('/orders/modifyFreqAddress','post',obj).then(res => {
             if(res == '成功') {
               that.$notification.success({
                 message: '成功',
-                description: '保存成功',
+                description: '修改成功',
                 duration: 4
               })
               that.$emit('close')
             } else
               that.$notification['error']({
                   message: '错误',
-                  description: '保存出错',
+                  description: '修改出错',
                   duration: 4
               })
           })

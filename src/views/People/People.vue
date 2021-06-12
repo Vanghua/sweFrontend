@@ -1,5 +1,9 @@
 <template>
   <div style="height: 100%; overflow-y: scroll;">
+    <change-Modal v-if="isShowChange"
+                  @close="isShowChange = false"
+                  :userInfo="personInfo"/>
+
     <a-card style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px;">
       <div style="overflow: hidden;">
         <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px; float: left;">人事管理</div>
@@ -29,8 +33,10 @@
         <div>邮箱：{{person.account_email}}</div>
         <div>真实性名：{{person.true_name}}</div>
         <div>联系方式：{{person.telephone}}</div>
-        <a-button type="danger">删除</a-button>
-        <a-button type="primary">修改信息</a-button>
+        <a-popconfirm title="确认要删除吗" okText="确认" cancelText="取消" @confirm="handleDelete(person)">
+          <a-button type="danger" style="margin-top: 8px;">删除</a-button>
+        </a-popconfirm>
+        <a-button type="primary" style="margin-top: 8px;" @click="personInfo = person; isShowChange = true;">修改信息</a-button>
       </div>
     </a-card>
     <a-pagination style="float: right; margin-top: 24px;"
@@ -43,10 +49,14 @@
 
 <script>
 import fetchAPI from "@/utils/fetchAPI";
+import ChangeInfo from "@/views/People/ChangeInfo";
 import { EngToChn } from "@/utils/typeChange";
 
 export default {
   name: "People",
+  components: {
+    'change-Modal': ChangeInfo
+  },
   mounted() {
     this.getData()
   },
@@ -54,7 +64,11 @@ export default {
     return {
       people: [],
       pageNum: 1,
-      total: 12
+      total: 0,
+      // 是否显示修改用户信息模态窗口
+      isShowChange: false,
+      // 点击的用户的个人信息
+      personInfo: {}
     }
   },
   methods: {
@@ -73,7 +87,7 @@ export default {
       new Promise((resolve, reject) => {
         // 请求仓库总数量
         fetchAPI('/humanresource/size', 'post', { type: ''}).then(res => {
-          that.total = res
+          that.total = parseInt(res)
           resolve()
         })
       }).then(() => {
@@ -131,7 +145,7 @@ export default {
       new Promise((resolve, reject) => {
         // 请求仓库总数量
         fetchAPI('/humanresource/size', 'post', { type: value}).then(res => {
-          that.total = res
+          that.total = parseInt(res)
           resolve()
         })
       }).then(() => {
@@ -153,6 +167,39 @@ export default {
          })
       })
     },
+
+    // 删除用户
+    handleDelete(person) {
+      let obj = {
+        account_name: person.account_name,
+        true_name: person.true_name
+      }
+      let that = this
+      if(person.account_name === this.$store.state.user.username)
+        that.$notification['error']({
+            message: '错误',
+            description: '不能删除自己',
+            duration: 4
+        })
+      else
+        fetchAPI('/humanresource/delete','post', obj).then(res => {
+          if(res == '人员删除失败')
+            that.$notification['error']({
+                message: '错误',
+                description: '人员删除失败',
+                duration: 4
+            })
+          else {
+            that.$notification.success({
+              message: '成功',
+              description: '人员删除成功',
+              duration: 4
+            })
+            that.getData()
+          }
+        })
+    },
+
   }
 }
 </script>
