@@ -76,8 +76,6 @@ export default {
           oldPassword: md5(values.nowPassword),
           newPassword: md5(values.newPassword)
         }
-        console.log(md5(values.nowPassword))
-        console.log(md5(values.newPassword))
         if(!err) {
           fetchAPI('/account/modifyPasswordWithOldPassword', 'post', obj).then(res => {
             if(res == '修改成功') {

@@ -116,6 +116,23 @@ export default {
         'address': record.acceptAddress,
         'addressDetail': record.acceptAddressDetail,
       })
+      this.setPlace(record.acceptAddressDetail)
+    },
+
+    // 基于百度地图的根据地名获取点坐标
+    setPlace(address){
+        let that = this
+        that.map.clearOverlays();    //清除地图上所有覆盖物
+        var local = new BMap.LocalSearch(that.map, { //智能搜索
+            onSearchComplete: function() {
+              var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+              that.map.centerAndZoom(pp, 18);
+              that.map.addOverlay(new BMap.Marker(pp));    //添加标注
+              that.point.lng = pp.lng
+              that.point.lat = pp.lat
+            }
+        });
+        local.search(address);
     },
 
     // 提交收件人信息

@@ -15,7 +15,7 @@
         overflow-y: scroll;">
       <div>
         <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px;">点击选择已保存的收件人信息</div>
-        <a-table style="margin-top: 16px;" :columns="accept" :dataSource="acceptData" bordered :pagination="false" :scroll="{x: 800}">
+        <a-table style="margin-top: 16px;" :columns="accept" :dataSource="addressInfo" bordered :pagination="false" :scroll="{x: 800}">
           <div slot="choose" slot-scope="text, record, index">
             <a-button type="primary" @click="$emit('autoAccept',record)"><a-icon type="check" />选择</a-button>
           </div>
@@ -27,10 +27,18 @@
 </template>
 
 <script>
+import fetchAPI from "@/utils/fetchAPI";
+
 export default {
   name: "AutoAcceptInfo",
+  mounted() {
+    this.getData()
+  },
   data() {
     return {
+      // 地址簿信息
+      addressInfo: [],
+      // 收件人地址簿表头格式
       accept: [
         {
           dataIndex: 'acceptName',
@@ -62,23 +70,31 @@ export default {
           scopedSlots: { customRender: 'choose' }
         }
       ],
-      acceptData: [
-        {
-          key: 1,
-          acceptName: '吴亦凡',
-          acceptPhone: '110',
-          acceptAddress: '东方明珠塔',
-          acceptAddressDetail: '汤臣一品'
-        },
-        {
-          key: 2,
-          acceptName: '郭富城',
-          acceptPhone: '17863025619',
-          acceptAddress: ['山东省', '威海市', '环翠区'],
-          acceptAddressDetail: '威海市环翠区山东大学(威海校区)'
-        }
-      ]
     }
+  },
+  methods: {
+    // 加载数据
+    getData() {
+      let that = this
+      // 请求地址簿信息
+      fetchAPI('/orders/getFreqAddress','post', {accountName: that.$store.state.user.username}).then(res => {
+         that.addressInfo =  JSON.parse(res)
+         let tempAccept = []
+         for(var i = 0; i < that.addressInfo.length; i++)
+              if(that.addressInfo[i].freqType == '收件人信息') {
+                let temp = {
+                  key: that.addressInfo[i].freqId,
+                  acceptName: that.addressInfo[i].freqName,
+                  acceptPhone: that.addressInfo[i].freqPhone,
+                  acceptAddressDetail: that.addressInfo[i].freqDetailAddress,
+                  acceptAddress: that.addressInfo[i].freqAddress
+                }
+                tempAccept.push(temp)
+              }
+         // 收件人自动填写只用保留收件人信息即可
+         that.addressInfo = tempAccept
+      })
+    },
   }
 }
 </script>

@@ -15,7 +15,7 @@
         overflow-y: scroll;">
       <div>
         <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px;">点击选择已保存的寄件人信息</div>
-        <a-table style="margin-top: 16px;" :columns="mail" :dataSource="mailData" bordered :pagination="false" :scroll="{x: 800}">
+        <a-table style="margin-top: 16px;" :columns="mail" :dataSource="addressInfo" bordered :pagination="false" :scroll="{x: 800}">
           <div slot="choose" slot-scope="text, record, index">
             <a-button type="primary" @click="$emit('autoMail',record)"><a-icon type="check" />选择</a-button>
           </div>
@@ -27,8 +27,13 @@
 </template>
 
 <script>
+import fetchAPI from "@/utils/fetchAPI";
+
 export default {
   name: "AutoMailInfo",
+  mounted() {
+    this.getData()
+  },
   data() {
     return {
       mail: [
@@ -62,30 +67,32 @@ export default {
           scopedSlots: { customRender: 'choose' }
         }
       ],
-      mailData: [
-        {
-          key: 1,
-          mailName: '樊华',
-          mailPhone: '120',
-          mailAddress: '威海市文化西路180号',
-          mailAddressDetail: '山东大学威海'
-        },
-        {
-          key: 2,
-          mailName: '吴彦祖',
-          mailPhone: '13838392153',
-          mailAddress: ['河南省','郑州市','金水区'],
-          mailAddressDetail: '郑州市金水区河南省化学研究所家属院'
-        },
-        {
-          key: 3,
-          mailName: '陈贯西',
-          mailPhone: '122',
-          mailAddress: '香港特区',
-          mailAddressDetail: '中寰'
-        }
-      ]
+      addressInfo: [],
     }
+  },
+  methods: {
+    // 加载数据
+    getData() {
+      let that = this
+      // 请求地址簿信息
+      fetchAPI('/orders/getFreqAddress','post', {accountName: that.$store.state.user.username}).then(res => {
+         that.addressInfo =  JSON.parse(res)
+         let tempMail = []
+         for(var i = 0; i < that.addressInfo.length; i++)
+              if(that.addressInfo[i].freqType == '寄件人信息') {
+                let temp = {
+                  key: that.addressInfo[i].freqId,
+                  mailName: that.addressInfo[i].freqName,
+                  mailPhone: that.addressInfo[i].freqPhone,
+                  mailAddressDetail: that.addressInfo[i].freqDetailAddress,
+                  mailAddress: that.addressInfo[i].freqAddress
+                }
+                tempMail.push(temp)
+              }
+         // 收件人自动填写只用保留收件人信息即可
+         that.addressInfo = tempMail
+      })
+    },
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%; overflow-y: scroll;">
     <change-Modal v-if="isShowChange"
-                  @close="isShowChange = false"
+                  @close="isShowChange = false; getData();"
                   :userInfo="personInfo"/>
 
     <a-card style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px;">
