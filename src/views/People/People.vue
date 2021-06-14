@@ -11,7 +11,7 @@
                     enter-button="Search"
                     placeholder="请输入用户名"
                     @search="nameSearch"/>
-         <a-select default-value="user" style="margin-top: 16px; width: 100%;" @change="typeSearch">
+         <a-select default-value="user" style="margin: 16px 0px; width: 100%;" @change="typeSearch" v-model="userType">
           <a-select-option value="user">普通用户</a-select-option>
           <a-select-option value="order">订单管理员</a-select-option>
           <a-select-option value="assign">调度管理员</a-select-option>
@@ -21,6 +21,10 @@
           <a-select-option value="financial">财务管理员</a-select-option>
           <a-select-option value="all">全局管理员</a-select-option>
         </a-select>
+        <a-input-search addon-before="在用户类型下搜索用户"
+                    enter-button="Search"
+                    placeholder="请输入用户名"
+                    @search="typeNameSearch"/>
         <a-button  style="float: left; margin-top: 16px;" @click="getData()"><a-icon type="sync"/>显示所有用户</a-button>
       </div>
     </a-card>
@@ -68,7 +72,9 @@ export default {
       // 是否显示修改用户信息模态窗口
       isShowChange: false,
       // 点击的用户的个人信息
-      personInfo: {}
+      personInfo: {},
+      // 用户类型信息
+      userType: 'user'
     }
   },
   methods: {
@@ -143,8 +149,8 @@ export default {
       }
       let that = this
       new Promise((resolve, reject) => {
-        // 请求仓库总数量
-        fetchAPI('/humanresource/size', 'post', { type: value}).then(res => {
+        // 请求用户总数量
+        fetchAPI('/humanresource/size', 'post', { type: value }).then(res => {
           that.total = parseInt(res)
           resolve()
         })
@@ -166,6 +172,36 @@ export default {
            that.people = ans
          })
       })
+    },
+
+    // 按用户类型和用户名搜索
+    typeNameSearch(value) {
+      let obj = {
+        account_name: value,
+        true_name: '',
+        email: '',
+        telephone: '',
+        type: this.userType,
+        number: 100,
+        current_page: 1
+      }
+      let that = this
+      fetchAPI('/humanresource/query', 'post', obj).then(res => {
+         let temp = JSON.parse(res)
+         let ans = []
+         for (var i = 0; i < temp.length; i++) {
+           // 接口规范(这个接口返回参数和上面的不一样)
+           let obj = {
+             account_name: temp[i].account_name,
+             true_name: temp[i].true_name,
+             account_email: temp[i].email,
+             account_type: EngToChn(temp[i].type),
+             telephone: temp[i].telephone
+           }
+           ans.push(obj)
+         }
+         that.people = ans
+       })
     },
 
     // 删除用户

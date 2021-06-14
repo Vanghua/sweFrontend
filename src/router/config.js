@@ -56,30 +56,6 @@ export const asyncRoutes = [
             component: () => import('../views/User/Send/AcceptInfo'),
             meta: { title: '收件人信息', keepalive: true, permission: ['all','user'], hidden: true, icon: 'gift' },
           },
-          {
-            path: '/Page/User/Ask/Ask',
-            name: 'Ask',
-            component: () => import('../views/User/Ask/Ask'),
-            meta: { title: '订单进度查询', keepalive: true, permission: ['all','user'], hidden: false, icon: 'contacts' },
-          },
-          {
-            path: '/Page/User/Ask/Process',
-            name: 'Process',
-            component: () => import('../views/User/Ask/Process'),
-            meta: { title: '订单进度详情', keepalive: true, permission: ['all','user'], hidden: true, icon: 'contacts' },
-          },
-          {
-            path: '/Page/User/NowOrder/NowOrder',
-            name: 'NowOrder',
-            component: () => import('../views/User/NowOrder/NowOrder'),
-            meta: { title: '订单查询', keepalive: true, permission: ['all','user'], hidden: false, icon: 'book' },
-          },
-          {
-            path: '/Page/User/NowOrder/PayOrder',
-            name: 'PayOrder',
-            component: () => import('../views/User/NowOrder/PayOrder'),
-            meta: { title: '订单支付', keepalive: true, permission: ['all','user'], hidden: true, icon: 'book' },
-          }
         ]
       },
       {
@@ -100,7 +76,7 @@ export const asyncRoutes = [
         path: '/Page/PageViewOrder',
         name: 'PageViewOrder',
         component: PageView,
-        meta: { title: '订单管理', keepalive: true, permission: ['all','order'], hidden: false, icon: 'file' },
+        meta: { title: '订单管理', keepalive: true, permission: ['all','order','user'], hidden: false, icon: 'file' },
         children: [
           {
             path: '/Page/Order/Control',
@@ -113,6 +89,36 @@ export const asyncRoutes = [
             name: 'Check',
             component: () => import('../views/Order/Check'),
             meta: { title: '订单审核详情', keepalive: true, permission: ['all','order'], hidden: true, icon: 'file' },
+          },
+          {
+            path: '/Page/User/Ask/Ask',
+            name: 'Ask',
+            component: () => import('../views/Order/Ask/Ask'),
+            meta: { title: '进行中订单查询', keepalive: true, permission: ['all','user','order'], hidden: false, icon: 'contacts' },
+          },
+          {
+            path: '/Page/User/Ask/Process',
+            name: 'Process',
+            component: () => import('../views/Order/Ask/Process'),
+            meta: { title: '进行中订单详情', keepalive: true, permission: ['all','user','order'], hidden: true, icon: 'contacts' },
+          },
+          {
+            path: '/Page/User/NowOrder/NowOrder',
+            name: 'NowOrder',
+            component: () => import('../views/Order/NowOrder/NowOrder'),
+            meta: { title: '未进行订单查询', keepalive: true, permission: ['all','user','order'], hidden: false, icon: 'book' },
+          },
+          {
+            path: '/Page/User/NowOrder/OrderDetail',
+            name: 'OrderDetail',
+            component: () => import('../views/Order/NowOrder/OrderDetail'),
+            meta: { title: '订单详情', keepalive: true, permission: ['all','user','order'], hidden: true, icon: 'book' },
+          },
+          {
+            path: '/Page/User/NowOrder/PayOrder',
+            name: 'PayOrder',
+            component: () => import('../views/Order/NowOrder/PayOrder'),
+            meta: { title: '订单支付', keepalive: true, permission: ['all','user','order'], hidden: true, icon: 'book' },
           }
         ]
       },
@@ -125,9 +131,33 @@ export const asyncRoutes = [
           {
             path: '/Page/Value/Control',
             name: 'Value',
-            component: () => import('../views/Value/Value'),
-            meta: { title: '财务管理', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'credit-card' },
-          }
+            component: () => import('../views/Value/BillAsk'),
+            meta: { title: '账单查询', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'profile' },
+          },
+          {
+            path: '/Page/Value/ReleaseSalary',
+            name: 'ReleaseSalary',
+            component: () => import('../views/Value/ReleaseSalary'),
+            meta: { title: '发放工资', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'red-envelope' },
+          },
+          {
+            path: '/Page/Value/Reinburse',
+            name: 'Reinburse',
+            component: () => import('../views/Value/Reinburse'),
+            meta: { title: '报销', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'dollar' },
+          },
+          {
+            path: '/Page/Value/Buy',
+            name: 'Buy',
+            component: () => import('../views/Value/Buy'),
+            meta: { title: '采购', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'shopping-cart' },
+          },
+          {
+            path: '/Page/Value/RequiredItems',
+            name: 'RequiredItems',
+            component: () => import('../views/Value/RequiredItems'),
+            meta: { title: '添加采购物品', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'search' },
+          },
         ]
       },
       {
@@ -172,13 +202,13 @@ export const asyncRoutes = [
         path: '/Page/PageViewAssign',
         name: 'PageViewAssign',
         component: PageView,
-        meta: { title: '调度管理', keepalive: true, permission: ['all','assign'], hidden: false, icon: 'control' },
+        meta: { title: '调度管理', keepalive: true, permission: ['all','assign','trans'], hidden: false, icon: 'control' },
         children: [
           {
             path: '/Page/Assign/Control',
             name: 'Assign',
             component: () => import('../views/Assign/Assign'),
-            meta: { title: '调度管理', keepalive: true, permission: ['all','assign'], hidden: false, icon: 'control' },
+            meta: { title: '调度管理', keepalive: true, permission: ['all','assign','trans'], hidden: false, icon: 'control' },
           }
         ]
       }

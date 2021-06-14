@@ -17,7 +17,7 @@
     <a-card style="margin-top: 44px; font-weight: bold;">
       <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px; display: flex;">填写物品信息</div>
       <div style="display: flex; margin-bottom: 16px; align-items: center;">
-        <a-select default-value="普通" style="width: 300px;">
+        <a-select default-value="普通" style="width: 300px;" @change="handleChange">
           <a-select-option value="急件">急件</a-select-option>
           <a-select-option value="普通">普通</a-select-option>
           <a-select-option value="慢件">慢件</a-select-option>
@@ -85,6 +85,11 @@ export default {
     }
   },
   methods: {
+    // 处理选择货物类型
+    handleChange(e) {
+      this.goodType = e
+    },
+
     handleSubmit() {
       console.log(this.acceptInfo)
       if(this.acceptInfo === undefined)
@@ -109,10 +114,10 @@ export default {
         let that = this
         let obj = {
           // 发起人
-          accountName: this.mailInfo.name,
+          accountName: this.$store.state.user.username,
           // 货物信息
           ordersName: this.goodName,
-          userPriority: this.goodType === '急件' ? 3 : this.goodType === '普通' ? 2 : 1,
+          userPriority: this.goodType == '急件' ? 3 : this.goodType == '普通' ? 2 : 1,
           // 收件人信息
           receiverName: this.acceptInfo.name,
           receiverPhone: this.acceptInfo.phone,
@@ -128,7 +133,6 @@ export default {
           senderLng: this.mailInfo.point.lng,
           senderLat: this.mailInfo.point.lat
         }
-        console.log(obj)
         fetchAPI('/orders/createOrders', 'post', obj).then(res => {
           if(res === '成功')
             this.$notification.success({

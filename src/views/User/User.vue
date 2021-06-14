@@ -30,9 +30,9 @@
         <a-descriptions-item label="真实姓名" :span="2">{{realName}}</a-descriptions-item>
         <a-descriptions-item label="联系方式" :span="2">{{userPhone}}</a-descriptions-item>
       </a-descriptions>
-      <a-button type="primary" style="float: left; margin-top: 16px;" @click="isUserInfo = !isUserInfo"><a-icon type="edit"></a-icon>修改信息</a-button>
-      <a-button type="primary" style="float: left; margin-top: 16px; margin-left: 16px;" @click="isUserPassword = !isUserPassword"><a-icon type="edit"></a-icon>修改密码</a-button>
-      <a-button type="primary" style="float: left; margin-top: 16px; margin-left: 16px;" @click="isUserEmail = !isUserEmail"><a-icon type="edit"></a-icon>修改邮箱</a-button>
+      <a-button type="primary" style="float: left; margin-top: 16px;" @click="isUserInfo = !isUserInfo"><a-icon type="edit"/>修改信息</a-button>
+      <a-button type="primary" style="float: left; margin-top: 16px; margin-left: 16px;" @click="isUserPassword = !isUserPassword"><a-icon type="edit"/>修改密码</a-button>
+      <a-button type="primary" style="float: left; margin-top: 16px; margin-left: 16px;" @click="isUserEmail = !isUserEmail"><a-icon type="edit"/>修改邮箱</a-button>
     </a-card>
 
     <a-card style="margin-top: 44px; overflow: hidden;" v-show="address" v-if="isMain">
@@ -71,6 +71,18 @@
       <div style="overflow: hidden;">
         <a-button type="primary" style="float: left; margin-top: 16px;"  @click="title = '寄件人信息'; isSendInfo = true; isMain = false;"><a-icon type="plus"></a-icon>添加</a-button>
       </div>
+    </a-card>
+
+    <a-card style="margin-top: 44px; overflow: hidden;" v-if="isTrans">
+      <div style="float: left; margin-bottom: 16px; font-size: 1.2rem;">运输员基本信息(填写完毕才可接单)</div>
+      <a-descriptions bordered :column="{xs: 1, xxl: 2, xl: 2, lg: 2, md: 2, sm: 1}">
+        <a-descriptions-item label="运输员类型" :span="2"></a-descriptions-item>
+        <a-descriptions-item label="运输员所属仓库编号" :span="2"></a-descriptions-item>
+        <a-descriptions-item label="运输员载具" :span="2"></a-descriptions-item>
+        <a-descriptions-item label="运输员载具容量" :span="2"></a-descriptions-item>
+        <a-descriptions-item label="工资" :span="2"></a-descriptions-item>
+      </a-descriptions>
+      <a-button type="primary" style="float: left; margin-top: 16px;"><a-icon type="edit"/>编辑信息</a-button>
     </a-card>
   </div>
 </template>
@@ -114,6 +126,8 @@ export default {
       idx: 1,
       // 是否显示主窗体
       isMain: true,
+      // 判断是否是运输员
+      isTrans: this.$store.state.user.role == 'trans' ? true : false,
       // 当前点击的地址簿信息
       targetInfo: {},
       userName: this.$store.state.user.username,

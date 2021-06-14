@@ -62,7 +62,7 @@ export default {
       collapsed: false,
       menuWidth: '256px',
       rightWidth: 'calc(100% - 256px)',
-      copyRight: 'Copyrigt  2021  山东大学(威海) 19计算机(中澳) 黄皓 朱胤璘 赵玉淋 樊华',
+      copyRight: 'Copyright  2021  山东大学(威海) 19计算机(中澳) 黄皓 朱胤璘 赵玉淋 樊华',
       nodes: this.dfsRouter(this.$store.state.permission.addRoutes[0]).children,
       isOverY: 'None',
       isHidden: 'hidden'

@@ -1,10 +1,10 @@
 <template>
-  <div>这是财务管理界面</div>
+  <div>添加采购物品界面</div>
 </template>
 
 <script>
 export default {
-  name: "Value"
+  name: "RequiredItems"
 }
 </script>
 
