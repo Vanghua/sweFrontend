@@ -6,7 +6,7 @@
                 @autoMail="autoMail">
     </auto-Modal>
     <a-form :form="form" @submit="submitAll" :label-col="{xs: { span: 24 }, sm: { span: 4 }}" :wrapper-col="{ xs: { span: 24 }, sm: { span: 16 },}">
-      <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px;">收件人信息填写</div>
+      <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px;">寄件人信息填写</div>
       <a-form-item label="寄件人姓名">
         <a-tooltip :trigger="['focus']" placement="topLeft" title="提示：请输入2-10位汉字组成的真实姓名">
           <a-input type="text"

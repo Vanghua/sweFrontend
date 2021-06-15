@@ -6,7 +6,7 @@
               theme="dark"
               mode="inline"
               :inlineCollapsed="collapsed"
-              :default-open-keys="['PageViewUser']"
+              :default-open-keys="['PageViewUser', 'PageViewOrder', 'PageViewWareHouse', 'PageViewPeople']"
               style="height: 100%; min-width: 100px; " @click="jump">
         <S-Menu :node="node" v-for="node in nodes"></S-Menu>
       </a-menu>
@@ -155,7 +155,6 @@ export default {
 
     // 点击菜单进行路由跳转
     jump(target) {
-      console.log(target.key)
       this.$router.push({name: target.key})
     },
     // 清除缓存

@@ -59,20 +59,6 @@ export const asyncRoutes = [
         ]
       },
       {
-        path: '/Page/PageViewPeople',
-        name: 'PageViewPeople',
-        component: PageView,
-        meta: { title: '人事管理', keepalive: true, permission: ['all','people'], hidden: false, icon: 'team' },
-        children: [
-          {
-            path: '/Page/People/Control',
-            name: 'People2',
-            component: () => import('../views/People/People'),
-            meta: { title: '人事管理', keepalive: true, permission: ['all','people'], hidden: false, icon: 'team' },
-          }
-        ]
-      },
-      {
         path: '/Page/PageViewOrder',
         name: 'PageViewOrder',
         component: PageView,
@@ -123,44 +109,6 @@ export const asyncRoutes = [
         ]
       },
       {
-        path: '/Page/PageViewValue',
-        name: 'PageViewValue',
-        component: PageView,
-        meta: { title: '财务管理', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'credit-card' },
-        children: [
-          {
-            path: '/Page/Value/Control',
-            name: 'Value',
-            component: () => import('../views/Value/BillAsk'),
-            meta: { title: '账单查询', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'profile' },
-          },
-          {
-            path: '/Page/Value/ReleaseSalary',
-            name: 'ReleaseSalary',
-            component: () => import('../views/Value/ReleaseSalary'),
-            meta: { title: '发放工资', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'red-envelope' },
-          },
-          {
-            path: '/Page/Value/Reinburse',
-            name: 'Reinburse',
-            component: () => import('../views/Value/Reinburse'),
-            meta: { title: '报销', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'dollar' },
-          },
-          {
-            path: '/Page/Value/Buy',
-            name: 'Buy',
-            component: () => import('../views/Value/Buy'),
-            meta: { title: '采购', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'shopping-cart' },
-          },
-          {
-            path: '/Page/Value/RequiredItems',
-            name: 'RequiredItems',
-            component: () => import('../views/Value/RequiredItems'),
-            meta: { title: '添加采购物品', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'search' },
-          },
-        ]
-      },
-      {
         path: '/Page/PageViewWareHouse',
         name: 'PageViewWareHouse',
         component: PageView,
@@ -196,6 +144,58 @@ export const asyncRoutes = [
             component: () => import('../views/WareHouse/DeleteWareHouse'),
             meta: { title: '删除仓库', keepalive: true, permission: ['all'], hidden: false, icon: 'minus-circle' },
           }
+        ]
+      },
+      {
+        path: '/Page/PageViewPeople',
+        name: 'PageViewPeople',
+        component: PageView,
+        meta: { title: '人事管理', keepalive: true, permission: ['all','people'], hidden: false, icon: 'team' },
+        children: [
+          {
+            path: '/Page/People/Control',
+            name: 'People2',
+            component: () => import('../views/People/People'),
+            meta: { title: '人事管理', keepalive: true, permission: ['all','people'], hidden: false, icon: 'team' },
+          }
+        ]
+      },
+      {
+        path: '/Page/PageViewValue',
+        name: 'PageViewValue',
+        component: PageView,
+        meta: { title: '财务管理', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'credit-card' },
+        children: [
+          {
+            path: '/Page/Value/Control',
+            name: 'Value',
+            component: () => import('../views/Value/BillAsk'),
+            meta: { title: '账单查询', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'profile' },
+          },
+          {
+            path: '/Page/Value/ReleaseSalary',
+            name: 'ReleaseSalary',
+            component: () => import('../views/Value/ReleaseSalary'),
+            meta: { title: '发放工资', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'red-envelope' },
+          },
+          {
+            path: '/Page/Value/Reinburse',
+            name: 'Reinburse',
+            component: () => import('../views/Value/Reinburse'),
+            meta: { title: '报销', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'dollar' },
+          },
+          {
+            path: '/Page/Value/Buy',
+            name: 'Buy',
+            component: () => import('../views/Value/Buy'),
+            meta: { title: '采购', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'shopping-cart' },
+          },
+          {
+            path: '/Page/Value/RequiredItems',
+            name: 'RequiredItems',
+            component: () => import('../views/Value/RequiredItems'),
+            meta: { title: '添加采购物品', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'search' },
+          },
         ]
       },
       {

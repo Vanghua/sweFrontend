@@ -230,7 +230,7 @@ export default {
              }
            }
            fetchAPI('/warehouse/warehouing','post', obj).then(res => {
-             if(res == '货物已入库') {
+             if(res == '入库办理完成') {
                that.$notification.success({
                  description: res,
                  message: '成功',

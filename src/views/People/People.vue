@@ -25,7 +25,7 @@
                     enter-button="Search"
                     placeholder="请输入用户名"
                     @search="typeNameSearch"/>
-        <a-button  style="float: left; margin-top: 16px;" @click="getData(1)"><a-icon type="sync"/>显示所有用户</a-button>
+        <a-button  style="float: left; margin-top: 16px;" @click="getData(1); isPage = true;"><a-icon type="sync"/>显示所有用户</a-button>
       </div>
     </a-card>
     <a-card v-for="person in people"
@@ -47,7 +47,8 @@
                   v-model="pageNum"
                   :defaultPageSize="10"
                   :total="total"
-                  @change="handleChange"/>
+                  @change="handleChange"
+                  v-if="isPage"/>
   </div>
 </template>
 
@@ -74,7 +75,9 @@ export default {
       // 点击的用户的个人信息
       personInfo: {},
       // 用户类型信息
-      userType: 'user'
+      userType: 'user',
+      // 是否显示页码
+      isPage: true,
     }
   },
   methods: {
@@ -113,13 +116,14 @@ export default {
 
     // 按用户名搜索
     nameSearch(value) {
+      this.isPage = false
       let obj = {
         account_name: value,
         true_name: '',
         email: '',
         telephone: '',
         type: '',
-        number: 100,
+        number: 10,
         current_page: 1
       }
       let that = this
@@ -143,13 +147,14 @@ export default {
 
     // 按用户类型搜索
     typeSearch(value) {
+      this.isPage = false
       let obj = {
         account_name: '',
         true_name: '',
         email: '',
         telephone: '',
         type: value,
-        number: 100,
+        number: 10,
         current_page: 1
       }
       let that = this
@@ -181,13 +186,14 @@ export default {
 
     // 按用户类型和用户名搜索
     typeNameSearch(value) {
+      this.isPage = false
       let obj = {
         account_name: value,
         true_name: '',
         email: '',
         telephone: '',
         type: this.userType,
-        number: 100,
+        number: 10,
         current_page: 1
       }
       let that = this

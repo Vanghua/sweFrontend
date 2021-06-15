@@ -134,7 +134,7 @@ export default {
       let type = this.form.getFieldValue('type') === undefined ? 0 : this.form.getFieldValue('type')
       let priority = this.item.userPriority == '急件' ? 3 : this.item.userPriority == '慢件' ? 1 : 2
       this.base = (0.1 * dis) * 10 * 0.3
-      let ans = ((0.1 * dis + 0.2 * weight + 0.2 * type + 3 * priority) * 10 * 0.5).toFixed(2)
+      let ans = ((0.1 * dis + 0.2 * weight + 0.2 * type + 3 * priority) * 10 * 0.5).toFixed(2) / 5
       this.form.setFieldsValue({'cost': ans})
     },
 

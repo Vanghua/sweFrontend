@@ -27,7 +27,7 @@
             <div style="display: flex;  width: 100%;">
               订单编号:
               <span style="color: grey; margin-left: 16px;">{{item.ordersId}}</span>
-              <span style="color: grey; justify-self: flex-end;">({{item.route == "" ? '请寄件': '运输中'}})</span>
+              (<span :style="{color: item.route == '' ? 'red' : 'blue', justifySelf: 'flex-end'}">{{item.route == "" ? '请寄件': '运输中'}}</span>)
             </div>
             <div style="display: flex;">
               货物名称:
