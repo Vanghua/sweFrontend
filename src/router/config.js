@@ -170,19 +170,19 @@ export const asyncRoutes = [
             path: '/Page/WareHouse/Control',
             name: 'WareHouse',
             component: () => import('../views/WareHouse/WareHouse'),
-            meta: { title: '仓库管理', keepalive: true, permission: ['all','warehouse'], hidden: false, icon: 'shop' },
+            meta: { title: '仓库管理', keepalive: true, permission: ['all','warehouse','trans'], hidden: false, icon: 'shop' },
           },
           {
             path: '/Page/WareHouse/WareHouseDetail',
             name: 'WareHouseDetail',
             component: () => import('../views/WareHouse/WareHouseDetail/WareHouseDetail'),
-            meta: { title: '仓库详情', keepalive: true, permission: ['all','warehouse'], hidden: true, icon: 'shop' },
+            meta: { title: '仓库详情', keepalive: true, permission: ['all','warehouse','trans'], hidden: true, icon: 'shop' },
           },
           {
             path: '/Page/WareHouse/Shelf',
             name: 'Shelf',
             component: () => import('../views/WareHouse/WareHouseDetail/Shelf'),
-            meta: { title: '货架详情', keepalive: true, permission: ['all','warehouse'], hidden: true, icon: 'shop' },
+            meta: { title: '货架详情', keepalive: true, permission: ['all','warehouse','trans'], hidden: true, icon: 'shop' },
           },
           {
             path: '/Page/WareHouse/CreateWareHouse',
@@ -202,13 +202,13 @@ export const asyncRoutes = [
         path: '/Page/PageViewAssign',
         name: 'PageViewAssign',
         component: PageView,
-        meta: { title: '调度管理', keepalive: true, permission: ['all','assign','trans'], hidden: false, icon: 'control' },
+        meta: { title: '调度管理', keepalive: true, permission: ['all','assign','trans'], hidden: true, icon: 'control' },
         children: [
           {
             path: '/Page/Assign/Control',
             name: 'Assign',
             component: () => import('../views/Assign/Assign'),
-            meta: { title: '调度管理', keepalive: true, permission: ['all','assign','trans'], hidden: false, icon: 'control' },
+            meta: { title: '调度管理', keepalive: true, permission: ['all','assign','trans'], hidden: true, icon: 'control' },
           }
         ]
       }

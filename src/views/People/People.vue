@@ -25,7 +25,7 @@
                     enter-button="Search"
                     placeholder="请输入用户名"
                     @search="typeNameSearch"/>
-        <a-button  style="float: left; margin-top: 16px;" @click="getData()"><a-icon type="sync"/>显示所有用户</a-button>
+        <a-button  style="float: left; margin-top: 16px;" @click="getData(1)"><a-icon type="sync"/>显示所有用户</a-button>
       </div>
     </a-card>
     <a-card v-for="person in people"
@@ -47,7 +47,7 @@
                   v-model="pageNum"
                   :defaultPageSize="10"
                   :total="total"
-                  @change=""/>
+                  @change="handleChange"/>
   </div>
 </template>
 
@@ -62,7 +62,7 @@ export default {
     'change-Modal': ChangeInfo
   },
   mounted() {
-    this.getData()
+    this.getData(1)
   },
   data() {
     return {
@@ -79,15 +79,15 @@ export default {
   },
   methods: {
     // 加载数据
-    getData() {
+    getData(page) {
       let obj = {
         account_name: this.$store.state.user.username,
         true_name: '',
         email: '',
         telephone: '',
         type: '',
-        number: 100,
-        current_page: 1
+        number: 10,
+        current_page: page
       }
       let that = this
       new Promise((resolve, reject) => {
@@ -104,6 +104,11 @@ export default {
              that.people[i].account_type = EngToChn(that.people[i].account_type)
          })
       })
+    },
+
+    // 翻页处理
+    handleChange(page) {
+      this.getData(page)
     },
 
     // 按用户名搜索

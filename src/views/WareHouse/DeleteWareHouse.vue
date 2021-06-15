@@ -12,7 +12,7 @@
     </a-card>
     <a-card v-for="house in houses"
           :key="house.name"
-          style="margin-top: 16px; cursor: pointer;">
+          style="margin-top: 16px;">
       <div style="display: flex; flex-direction: column; align-items: flex-start; font-size: 1.3rem;">
         <div>仓库负责人：{{house.warehouse_manager}}</div>
         <div>仓库地址：{{house.warehouse_address}}</div>
@@ -33,6 +33,7 @@
 
 <script>
 import fetchAPI from "@/utils/fetchAPI";
+import houseType from "@/utils/houseType";
 
 export default {
   name: "DeleteWareHouse",
@@ -49,8 +50,22 @@ export default {
   },
   methods: {
     // 处理删除仓库操作
-    handleDelete(e) {
-      alert('点击了删除')
+    handleDelete(house) {
+      let that = this
+      fetchAPI('/warehouse/warehouseDelete','post', house.warehouse_id).then(res => {
+        if(res == '仓库已删除')
+          that.$notification.success({
+              message: '成功',
+              description: '修改成功',
+              duration: 4
+          })
+        else
+          this.$notification.error({
+            message: '删除失败',
+            description: res,
+            duration: 4
+         })
+      })
     },
 
     // 处理搜索结果
@@ -73,17 +88,7 @@ export default {
         fetchAPI('/warehouse/warehouseQuery', 'post', obj).then(res => {
           that.houses = JSON.parse(res)
           for (var i = 0; i < that.houses.length; i++)
-            switch (that.houses[i].warehouse_type) {
-              case 1:
-                that.houses[i].warehouse_type = '接收站'
-                break
-              case 2:
-                that.houses[i].warehouse_type = '存储仓库'
-                break
-              case 3:
-                that.houses[i].warehouse_type = '中转站'
-                break
-            }
+            that.houses[i].warehouse_type = houseType(that.houses[i].warehouse_type)
         })
       } else {
         this.$notification['error']({
@@ -113,19 +118,8 @@ export default {
       }).then(() => {
         fetchAPI('/warehouse/warehouseQueryAll', 'post', obj).then(res => {
           that.houses = JSON.parse(res)
-          for (var i = 0; i < that.houses.length; i++) {
-            switch (that.houses[i].warehouse_type) {
-              case 1:
-                that.houses[i].warehouse_type = '接收站'
-                break
-              case 2:
-                that.houses[i].warehouse_type = '存储仓库'
-                break
-              case 3:
-                that.houses[i].warehouse_type = '中转站'
-                break
-            }
-          }
+          for (var i = 0; i < that.houses.length; i++)
+            that.houses[i].warehouse_type = houseType(that.houses[i].warehouse_type)
         })
       })
     },

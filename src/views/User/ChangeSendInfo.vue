@@ -117,7 +117,7 @@ export default {
       e.preventDefault()
       let that = this
       let validateFieldsKey = ['name', 'phone', 'address', 'addressDetail']
-       this.form.validateFields(validateFieldsKey, (err, values) => {
+      this.form.validateFields(validateFieldsKey, (err, values) => {
         if(!err) {
           let obj =  {
             freqId: that.sendInfo.key,

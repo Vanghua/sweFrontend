@@ -102,7 +102,7 @@ router.beforeEach((to, from, next) => {
                 // 用户未登录
                 if (store.state.user.username == '') {
                     // 跳回登录界面，走上述流程
-                    next({"path": '/'})
+                    next({'name': 'Login'})
                 } else {
                     // 登陆过则正常跳转
                     next()

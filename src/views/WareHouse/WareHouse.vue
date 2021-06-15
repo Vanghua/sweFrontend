@@ -1,14 +1,23 @@
 <template>
   <a-card style="height: 100%; overflow-y: scroll;">
     <div id="houseMap" style="height: 400px; margin-bottom: 24px;"></div>
-    <a-input-search addon-before="搜索仓库"
+    <a-input-search addon-before="按编号搜索仓库"
                     enter-button="Search"
                     v-if="isShowSearch"
-                    @search="handleSearch"
+                    @search="handleIdSearch"
                     placeholder="请输入仓库编号"/>
+    <a-input-search addon-before="按地址搜索仓库"
+                    enter-button="Search"
+                    v-if="isShowSearch"
+                    @search="handleAddressSearch"
+                    placeholder="请输入仓库地址"
+                    style="margin-top: 16px;"/>
     <div style="overflow: hidden; margin-top: 16px;">
       <a-button  style="float: left;" @click="getData(1)" v-if="isShowSearch"><a-icon type="sync"/>显示所有仓库</a-button>
     </div>
+    <a-card style="font-weight: bold; font-size: 1.2rem;" v-if="!isShowSearch">
+      <div style="float: left;">您的仓库</div>
+    </a-card>
     <a-card v-for="house in houses"
             :key="house.name"
             style="margin-top: 16px; cursor: pointer;"
@@ -32,6 +41,7 @@
 
 <script>
 import fetchAPI from "@/utils/fetchAPI";
+import houseType from "@/utils/houseType";
 
 export default {
   name: "WareHouse",
@@ -58,7 +68,7 @@ export default {
   },
   methods: {
     // 处理搜索结果
-    handleSearch(value) {
+    handleIdSearch(value) {
       let pattern = /^[0-9]+$/
       if(pattern.test(value)) {
         this.isPage = false
@@ -77,17 +87,7 @@ export default {
         fetchAPI('/warehouse/warehouseQuery', 'post', obj).then(res => {
           that.houses = JSON.parse(res)
           for (var i = 0; i < that.houses.length; i++)
-            switch (that.houses[i].warehouse_type) {
-              case 1:
-                that.houses[i].warehouse_type = '接收站'
-                break
-              case 2:
-                that.houses[i].warehouse_type = '存储仓库'
-                break
-              case 3:
-                that.houses[i].warehouse_type = '中转站'
-                break
-            }
+            that.houses[i].warehouse_type = houseType(that.houses[i].warehouse_type)
         })
       } else {
         this.$notification['error']({
@@ -98,8 +98,32 @@ export default {
       }
     },
 
+    // 按地址搜索仓库
+    handleAddressSearch(value) {
+      let obj = {
+        warehouseId: "",
+        warehouseType: "",
+        warehhouseStoragenum: "",
+        warehouseAddress: value,
+        warehouseManager: "",
+        warehouseManagerTel: "",
+        warehouseCreationtime: "",
+        warehouseLng: "",
+        warehouseLat: ""
+      }
+      let that = this
+      fetchAPI('/warehouse/warehouseQueryAddress', 'post', obj).then(res => {
+          that.isPage = false
+          that.houses = JSON.parse(res)
+        console.log(that.houses)
+          for (var i = 0; i < that.houses.length; i++)
+            that.houses[i].warehouse_type = houseType(that.houses[i].warehouse_type)
+      })
+    },
+
     // 获取数据
     getData(page) {
+      let that = this
       // 如果当前是最高管理员权限，那么显示所有仓库
       if(this.$store.state.user.role == 'all') {
         this.isPage = true
@@ -129,19 +153,42 @@ export default {
             for (var i = 0; i < that.houses.length; i++) {
               overlays.push(new BMap.Marker(new BMap.Point(that.houses[i].warehouse_lng, that.houses[i].warehouse_lat)))
               that.map.addOverlay(overlays[i])
-              switch (that.houses[i].warehouse_type) {
-                case 1:
-                  that.houses[i].warehouse_type = '接收站'
-                  break
-                case 2:
-                  that.houses[i].warehouse_type = '存储仓库'
-                  break
-                case 3:
-                  that.houses[i].warehouse_type = '中转站'
-                  break
-              }
+              that.houses[i].warehouse_type = houseType(that.houses[i].warehouse_type)
             }
             that.overlay = overlays
+          })
+        })
+      }
+      else if(this.$store.state.user.role == 'trans') {
+        new Promise((resolve, reject) => {
+          fetchAPI('/assign/getTransInfo','post',{accountName: that.$store.state.user.username, warehouseId: 0}).then(res => {
+            if(JSON.parse(res) == 0)
+              // 如果所属仓库编号为0说明运输员没有绑定所属仓库，不显示仓库信息
+              reject()
+            else
+              resolve(JSON.parse(res))
+          })
+        }).then(res => {
+          let obj = {
+            warehouseId: res,
+            warehouseType: 0,
+            warehhouseStoragenum: 0,
+            warehouseAddress: '',
+            warehouseManager: '',
+            warehouseManagerTel: '',
+            warehouseCreationtime: '',
+            warehouseLng: '',
+            warehouseLat: ''
+          }
+          fetchAPI('/warehouse/warehouseQuery','post',obj).then(res => {
+            that.houses = JSON.parse(res)
+            // 在地图上添加坐标
+            let overlays = []
+            if (that.overlay.length)
+                for (var i = 0; i < that.overlay.length; i++)
+                  that.map.removeOverlay(that.overlay[i])
+            overlays.push(new BMap.Marker(new BMap.Point(that.houses[0].warehouse_lng, that.houses[0].warehouse_lat)))
+            that.map.addOverlay(overlays[0])
           })
         })
       }

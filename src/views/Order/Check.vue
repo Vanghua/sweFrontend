@@ -26,7 +26,7 @@
             <a-input type="text"
                      size="large"
                      placeholder="请输入数字单位是kg"
-                     v-decorator="['weight',{rules: [{required: true, pattern: new RegExp('^0\\.\\d+$|^[1-9]+(\\.\\d+)?$','i'), message: '物品重量格式输入有误'}], validateTrigger: 'change'}]"/>
+                     v-decorator="['weight',{rules: [{required: true, pattern: new RegExp('^[+]{0,1}(\\d+)$|^[+]{0,1}(\\d+\\.\\d+)$','i'), message: '物品重量格式输入有误'}], validateTrigger: 'change'}]"/>
           </a-form-item>
           <a-form-item label="货物种类">
             <a-select style="width: 100%;" @change="" v-decorator="['type',{rules: [{required: true, message: '请填写货物种类'}]}]">
@@ -82,6 +82,9 @@ export default {
       reason: ''
     }
   },
+  watch: {
+
+  },
   methods: {
 
     // 审核通过
@@ -133,27 +136,41 @@ export default {
       this.base = (0.1 * dis) * 10 * 0.3
       let ans = ((0.1 * dis + 0.2 * weight + 0.2 * type + 3 * priority) * 10 * 0.5).toFixed(2)
       this.form.setFieldsValue({'cost': ans})
-      alert(this.base)
     },
 
     // 判断货物种类
     judge(e) {
-      switch(e) {
-        case '1':
-          return '日用品'
-        case '2':
-          return '文件'
-        case '2.1':
-          return '食品'
-        case '1.1':
-          return '衣物'
-        case '3.1':
-          return '数码产品'
-        case '5':
-          return '贵重物品'
-        case '3':
-          return '其它'
-      }
+      if(e == 1)
+        return '日用品'
+      else if(e == 2)
+        return '文件'
+      else if(e == 2.1)
+        return '食品'
+      else if(e == 1.1)
+        return '衣物'
+      else if(e == 3.1)
+        return '数码产品'
+      else if(e == 5)
+        return '贵重物品'
+      else if(e == 3)
+        return '其它'
+
+      // switch(e) {
+      //   case 1:
+      //     return '日用品'
+      //   case 2:
+      //     return '文件'
+      //   case 2.1:
+      //     return '食品'
+      //   case 1.1:
+      //     return '衣物'
+      //   case 3.1:
+      //     return '数码产品'
+      //   case 5:
+      //     return '贵重物品'
+      //   case 3:
+      //     return '其它'
+      // }
     },
 
     // 审核不通过的提交

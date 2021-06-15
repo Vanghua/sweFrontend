@@ -80,6 +80,14 @@ export default {
         lng: '',
         // 纬度
         lat: ''
+      },
+      // 仓库地理位置描述
+      address: '',
+      // 仓库地理位置结构化描述
+      addressComponents: {
+        province: '',
+        city: '',
+        district: ''
       }
     }
   },
@@ -109,8 +117,19 @@ export default {
       // 更新坐标
       this.point.lng = e.point.lng
       this.point.lat = e.point.lat
-      this.form.setFieldsValue({
-        'addressDetail': `经度是: ${e.point.lng}  纬度是: ${e.point.lat}`
+      let geo = new BMap.Geocoder()
+      let that = this
+      new Promise((resolve, reject) => {
+        geo.getLocation(e.point, e => {
+          that.address = e.address
+          that.addressComponents = e.addressComponents
+          console.log(e.addressComponents)
+          resolve()
+        },{})
+      }).then(res => {
+        that.form.setFieldsValue({
+          'addressDetail': `经度是: ${e.point.lng}  纬度是: ${e.point.lat} 地理位置是: ${that.address}`
+        })
       })
     },
 
@@ -131,19 +150,23 @@ export default {
               warehouseManagerTel: values.phone,
               warehouseCreationtime: '',
               warehouseLng: that.point.lng,
-              warehouseLat: that.point.lat
+              warehouseLat: that.point.lat,
+              warehouseCity: that.addressComponents.city,
+              warehouseProvince: that.addressComponents.province,
+              warehouseDistrict: that.addressComponents.district,
+              warehouseToAddress: ''
           }
           fetchAPI('/warehouse/addWarehouse', 'post', obj).then(res => {
-            if(res == '仓库已存在')
-              that.$notification['error']({
-                  message: '错误',
-                  description: '仓库已存在',
-                  duration: 4
-              })
-            else
+            if(res == '仓库已成功添加')
               that.$notification.success({
                   message: '成功',
                   description: '仓库已创建',
+                  duration: 4
+              })
+            else
+              that.$notification['error']({
+                  message: '错误',
+                  description: res,
                   duration: 4
               })
           })

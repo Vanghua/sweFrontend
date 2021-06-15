@@ -15,11 +15,14 @@
                      :email="userEmail"
                      :userName="userName" />
     <sendInfo-Modal v-if="isSendInfo"
-                    @close="isSendInfo = false; isMain = true; getData();" :title="title" />
+                    @close="isSendInfo = false; isMain = true; getData();"
+                    :title="title" />
     <sendChange-Modal v-if="isSendChange"
                       @close="isSendChange = false; isMain = true; getData();"
                       :title="title"
                       :sendInfo="targetInfo"/>
+    <warehouse-Modal v-if="isWarehouse"
+                     @close="isWarehouse = false; isMain = true; getData();"/>
 
     <a-card v-if="isMain">
       <div style="float: left; margin-bottom: 16px; font-size: 1.2rem;">用户基本信息</div>
@@ -73,16 +76,13 @@
       </div>
     </a-card>
 
-    <a-card style="margin-top: 44px; overflow: hidden;" v-if="isTrans">
+    <a-card style="margin-top: 44px; overflow: hidden;" v-if="isTrans && isMain">
       <div style="float: left; margin-bottom: 16px; font-size: 1.2rem;">运输员基本信息(填写完毕才可接单)</div>
       <a-descriptions bordered :column="{xs: 1, xxl: 2, xl: 2, lg: 2, md: 2, sm: 1}">
-        <a-descriptions-item label="运输员类型" :span="2"></a-descriptions-item>
-        <a-descriptions-item label="运输员所属仓库编号" :span="2"></a-descriptions-item>
-        <a-descriptions-item label="运输员载具" :span="2"></a-descriptions-item>
-        <a-descriptions-item label="运输员载具容量" :span="2"></a-descriptions-item>
-        <a-descriptions-item label="工资" :span="2"></a-descriptions-item>
+        <a-descriptions-item label="运输员所属仓库编号" :span="2">{{warehouseId}}</a-descriptions-item>
+        <a-descriptions-item label="运输员载具载重量" :span="2">{{transWeight}}</a-descriptions-item>
       </a-descriptions>
-      <a-button type="primary" style="float: left; margin-top: 16px;"><a-icon type="edit"/>编辑信息</a-button>
+      <a-button type="primary" style="float: left; margin-top: 16px;" @click="isWarehouse = true; isMain = false;"><a-icon type="edit"/>编辑信息</a-button>
     </a-card>
   </div>
 </template>
@@ -94,7 +94,7 @@ import ChangeUserEmail from "@/views/User/ChangeUserEmail";
 import AddSendInfo from "@/views/User/AddSendInfo";
 import ChangeSendInfo from "@/views/User/ChangeSendInfo";
 import fetchAPI from "@/utils/fetchAPI";
-import AddressFormat from '@/utils/AddressFormat';
+import EditWarehouseInfo from "@/views/User/EditWarehouseInfo";
 
 export default {
   name: "User",
@@ -103,7 +103,8 @@ export default {
     'userPassword-Modal': ChangeUserPassword,
     'userEmail-Modal': ChangeUserEmail,
     'sendInfo-Modal': AddSendInfo,
-    'sendChange-Modal': ChangeSendInfo
+    'sendChange-Modal': ChangeSendInfo,
+    'warehouse-Modal': EditWarehouseInfo
   },
   created() {
     this.getData()
@@ -126,8 +127,14 @@ export default {
       idx: 1,
       // 是否显示主窗体
       isMain: true,
+      // 是否显示编辑运输员信息
+      isWarehouse: false,
       // 判断是否是运输员
       isTrans: this.$store.state.user.role == 'trans' ? true : false,
+      // 运输员所属仓库
+      warehouseId: '',
+      // 运输员载具载重量
+      transWeight: '',
       // 当前点击的地址簿信息
       targetInfo: {},
       userName: this.$store.state.user.username,
@@ -235,34 +242,43 @@ export default {
         })
       }).then(res => {
         // 请求常用地址簿信息
-        fetchAPI('/orders/getFreqAddress','post', {accountName: that.$store.state.user.username}).then(res => {
-          that.addressInfo =  JSON.parse(res)
-          let tempAccept = []
-          let tempMail = []
-          for(var i = 0; i < that.addressInfo.length; i++) {
-            if(that.addressInfo[i].freqType == '收件人信息') {
-              let temp = {
-                key: that.addressInfo[i].freqId,
-                acceptName: that.addressInfo[i].freqName,
-                acceptPhone: that.addressInfo[i].freqPhone,
-                acceptAddressDetail: that.addressInfo[i].freqDetailAddress,
-                acceptAddress: that.addressInfo[i].freqAddress
+        return new Promise((resolve, reject) => {
+          fetchAPI('/orders/getFreqAddress','post', {accountName: that.$store.state.user.username}).then(res => {
+            that.addressInfo =  JSON.parse(res)
+            let tempAccept = []
+            let tempMail = []
+            for(var i = 0; i < that.addressInfo.length; i++) {
+              if(that.addressInfo[i].freqType == '收件人信息') {
+                let temp = {
+                  key: that.addressInfo[i].freqId,
+                  acceptName: that.addressInfo[i].freqName,
+                  acceptPhone: that.addressInfo[i].freqPhone,
+                  acceptAddressDetail: that.addressInfo[i].freqDetailAddress,
+                  acceptAddress: that.addressInfo[i].freqAddress
+                }
+                tempAccept.push(temp)
               }
-              tempAccept.push(temp)
-            }
-            else {
-              let temp = {
-                key: that.addressInfo[i].freqId,
-                mailName: that.addressInfo[i].freqName,
-                mailPhone: that.addressInfo[i].freqPhone,
-                mailAddressDetail: that.addressInfo[i].freqDetailAddress,
-                mailAddress: that.addressInfo[i].freqAddress
+              else {
+                let temp = {
+                  key: that.addressInfo[i].freqId,
+                  mailName: that.addressInfo[i].freqName,
+                  mailPhone: that.addressInfo[i].freqPhone,
+                  mailAddressDetail: that.addressInfo[i].freqDetailAddress,
+                  mailAddress: that.addressInfo[i].freqAddress
+                }
+                tempMail.push(temp)
               }
-              tempMail.push(temp)
             }
-          }
-          that.acceptData = tempAccept
-          that.mailData = tempMail
+            that.acceptData = tempAccept
+            that.mailData = tempMail
+            resolve()
+          })
+        })
+      }).then(res => {
+        // 请求运输相关信息
+        fetchAPI('/assign/getTransInfo','post', {accountName: that.$store.state.user.username, warehouseId: 0}).then(res => {
+          that.warehouseId = JSON.parse(res).warehouse_id
+          that.transWeight = JSON.parse(res).trans_weight
         })
       })
 
