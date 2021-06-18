@@ -18,6 +18,7 @@
         <a-descriptions-item label="订单状态" :span="2">{{item.ordersStatus}}</a-descriptions-item>
         <a-descriptions-item label="货物名称" :span="2">{{item.ordersName}}</a-descriptions-item>
         <a-descriptions-item label="寄件类型" :span="2">{{item.userPriority}}</a-descriptions-item>
+        <a-descriptions-item label="完成时间" :span="2" v-if="item.ordersStatus == '已完成' ? true: false">{{item.successTime}}</a-descriptions-item>
         <a-descriptions-item label="取消原因" :span="2" v-if="item.ordersStatus == '取消' ? true: false">{{item.cancleReason}}</a-descriptions-item>
       </a-descriptions>
       <a-button type="danger" @click="$router.push({name: 'NowOrder'})" class="pass" style="margin-top: 24px;">返回</a-button>
@@ -30,7 +31,6 @@ export default {
   name: "OrderDetail",
   mounted() {
     this.item = this.$route.params.OrderInfo
-    console.log(this.item)
     this.item.userPriority = this.item.userPriority == '3' ? '急件' : this.item.userPriority == '2' ? '普通' : '慢件'
   },
   data() {

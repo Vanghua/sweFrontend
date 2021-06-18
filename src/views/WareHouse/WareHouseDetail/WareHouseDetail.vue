@@ -80,7 +80,14 @@
     <!-- 待出库货物信息 -->
     <a-card style="margin-top: 24px;">
       <div style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px; float: left;">待出库货物信息</div>
-      <a-table></a-table>
+      <a-table :columns="outColumns" :dataSource="outData" bordered :pagination="false" :scroll="{x: 800}">
+        <div slot="out" slot-scope="text, record, index">
+          <a-popconfirm title="确认要完成订单吗" okText="确认" cancelText="取消" @confirm="finishOrder(record)">
+            <a-button type="danger" style="margin-right: 16px;" v-if="$store.state.user.role != 'trans' ? true : false">完成订单</a-button>
+          </a-popconfirm>
+          <a-button type="primary" @click="handleOutHouse(record)" :disabled="$store.state.user.role === 'trans' ? false : true">出库</a-button>
+        </div>
+      </a-table>
     </a-card>
 
     <a-button type="danger" @click="$router.push({name: 'WareHouse'})" style="margin-top: 24px; float: left;">返回</a-button>
@@ -156,7 +163,29 @@ export default {
       // 货架信息
       shelfData: [],
       // 仓库信息
-      houseInfo: {}
+      houseInfo: {},
+      // 出库表表头描述
+      outColumns: [
+        {
+          dataIndex: 'orderId',
+          title: '订单编号',
+          key: 'orderId',
+          align: 'center'
+        },
+        {
+          dataIndex: 'goodName',
+          title: '货物名称',
+          key: 'goodName',
+          align: 'center'
+        },
+        {
+          title: '出库',
+          align: 'center',
+          scopedSlots: { customRender: 'out' }
+        },
+      ],
+      // 出库表的数据来源
+      outData: []
     }
   },
   methods: {
@@ -186,17 +215,32 @@ export default {
       }
       let that = this
       // 加载货架信息
-      fetchAPI('/warehouse/shelfQueryAll','post',obj).then(res => {
-        that.shelf = JSON.parse(res)
-        let tempData = []
-        for(var i = 0; i < that.shelf.length; i++)
-          tempData.push({shelfId: that.shelf[i].shelf_id, shelfContent: that.shelf[i].shelf_storageNum, key: that.shelf[i].shelf_id})
-        that.shelfData = tempData
+      new Promise((resolve, reject) => {
+        fetchAPI('/warehouse/shelfQueryAll','post',obj).then(res => {
+          that.shelf = JSON.parse(res)
+          let tempData = []
+          for(var i = 0; i < that.shelf.length; i++)
+            tempData.push({shelfId: that.shelf[i].shelf_id, shelfContent: that.shelf[i].shelf_storageNum, key: that.shelf[i].shelf_id})
+          that.shelfData = tempData
+          resolve()
+        })
+      }).then(res => {
+        // 加载出库顺序信息
+        fetchAPI('/warehouse/exwarehouseSheet','post', {
+          warehouseAddress: this.$route.params.houseInfo.warehouse_address,
+          warehouseToAddress: '!'
+        }).then(res => {
+          let tempData = JSON.parse(res)
+          let tempStore = []
+          for(var index in tempData) {
+            tempStore.push({
+              orderId: tempData[index].orders_id,
+              goodName: tempData[index].good_name
+            })
+          }
+          that.outData = tempStore
+        })
       })
-      // 加载出库顺序信息
-      // fetchAPI('/warehouse/exwarehouseSheet','post', warehouseInfo).then(res => {
-      //   console.log(JSON.parse(res))
-      // })
     },
 
     // 入库表单提交
@@ -275,6 +319,54 @@ export default {
 
       })
     },
+
+    // 出库操作
+    handleOutHouse(record) {
+      let that = this
+      fetchAPI('/warehouse/exwarehousing','post',{
+        orderId: record.orderId,
+        managerId: this.$route.params.houseInfo.warehouse_manager
+      }).then(res => {
+        if(res == '出库办理完成') {
+          that.$notification.success({
+            duration: 4,
+            message: '成功',
+            description: res
+          })
+          that.getData()
+        }
+        else
+          that.$notification.error({
+            duration: 4,
+            message: '失败',
+            description: res
+          })
+      })
+    },
+
+    // 完成订单
+    finishOrder(record) {
+      let that = this
+      fetchAPI('/orders/successOrders','post',{
+        ordersId: record.orderId
+      }).then(res => {
+        if(res == '成功') {
+          that.$notification.success({
+            duration: 4,
+            message: '成功',
+            description: res
+          })
+          that.getData()
+        } else {
+          console.log(res)
+          that.$notification.error({
+            duration: 4,
+            message: '失败',
+            description: '此时无法完成订单'
+          })
+        }
+      })
+    }
   }
 }
 </script>

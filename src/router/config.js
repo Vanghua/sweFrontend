@@ -164,7 +164,7 @@ export const asyncRoutes = [
         path: '/Page/PageViewValue',
         name: 'PageViewValue',
         component: PageView,
-        meta: { title: '财务管理', keepalive: true, permission: ['all','financial'], hidden: false, icon: 'credit-card' },
+        meta: { title: '财务管理', keepalive: true, permission: ['all','financial'], hidden: true, icon: 'credit-card' },
         children: [
           {
             path: '/Page/Value/Control',

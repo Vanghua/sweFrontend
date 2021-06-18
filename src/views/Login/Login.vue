@@ -332,7 +332,6 @@ export default {
               // 注册的用户类型(user表示普通用户)
               accountType: that.workerType
             }
-            console.log(obj)
             fetchAPI('/account/register','post', obj).then(res => {
               if(res == '用户名已被使用')
                 failureTip('错误','用户名已被使用')

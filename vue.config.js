@@ -22,7 +22,7 @@ module.exports = {
         }
     },
     // APP打包时使用下述三个配置，移动端的路径设置和pc端是有差别的
-    // publicPath: './',
-    // outputDir: 'dist',
-    // assetsDir: 'static',
+    publicPath: './',
+    outputDir: 'dist',
+    assetsDir: 'static',
 }

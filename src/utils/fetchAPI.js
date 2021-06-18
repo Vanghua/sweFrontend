@@ -8,9 +8,9 @@ export default function fetchAPI(url, method, data) {
     // 请求体
     const body = data == null ? null : JSON.stringify(data)
     // URL起始
-    const BASE_URL = '/api'
+    // const BASE_URL = '/api'
     // webapp的基础路径，手机上不存在跨域问题
-    // const BASE_URL = 'http://n2900b3853.imdo.co/api'
+    const BASE_URL = 'http://n2900b3853.imdo.co/api'
     // 封装fetch
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + url, {
@@ -26,7 +26,7 @@ export default function fetchAPI(url, method, data) {
         }).then(ans => {
             resolve(ans)
         }).catch(error => {
-            notification.error({ message: '错误', description: error, key: 'ERROR' })
+            // notification.error({ message: '错误', description: error, key: 'ERROR' })
       })
     })
 }

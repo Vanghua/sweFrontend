@@ -79,6 +79,8 @@ export default {
       let that = this
       let obj = { ordersId: this.item.ordersId }
 
+      console.log(this.item)
+
       // 加载进度数据
       let tempData = []
       for(var i = 0; i < this.item.route.length; i++) {
@@ -91,7 +93,6 @@ export default {
 
       // 如果安排的路径不为空，那么说明货物已经入库并且已经安排好了录像，可以进行画图
       if(this.item.route != '') {
-
         let routePoint = []
         // 生成仓库坐标数组
         for (var i = 0; i < this.item.route.length; i++)
@@ -109,22 +110,41 @@ export default {
       fetchAPI('/orders/queryOrdersPosition','post',obj).then(res => {
         let temp = JSON.parse(res)
         let tempData = []
-        if(temp.warehouseLat == null && temp.warehouseLng == null) {
+        if(temp.warehouseLat == null && temp.warehouseLng == null && that.item.route.length && that.item.route[0] == "") {
           tempData.push({title: '已支付运费', description: that.item.createTime})
           // that.map.panTo(new BMap.Point(that.item.senderLng, that.item.senderLat),{})
           that.steps = tempData
         } else {
-          that.map.panTo(new BMap.Point(temp.warehouseLng, temp.warehouseLat))
-          for(var index in that.item.route)
-            if(that.item.route[index] == temp.warehouseAddress) {
-              that.current = parseInt(index)
-              // 添加当前位置的点标记
-              if(JSON.stringify(that.overlay) != JSON.stringify({}))
-                that.map.removeOverlay(that.overlay)
-              that.overlay = new BMap.Marker(new BMap.Point(temp.warehouseLng, temp.warehouseLat))
-              this.map.addOverlay(that.overlay)
-              break
-            }
+          // 货物出库，此时将货物位置定位到货物出库前的仓库
+          if(temp.warehouseLat == null && temp.warehouseLng == null) {
+            // 判断当前所在仓库
+            let nowPos = 0
+            for(var i = 0; i < that.item.route.length; i++)
+              if(that.item.routeTime[i] == "") {
+                nowPos = i - 1
+                break
+              }
+            that.current = nowPos
+            that.map.panTo(new BMap.Point(that.item.routeLng[nowPos], that.item.routeLat[nowPos]))
+            if (JSON.stringify(that.overlay) != JSON.stringify({}))
+                  that.map.removeOverlay(that.overlay)
+            that.overlay = new BMap.Marker(new BMap.Point(that.item.routeLng[nowPos], that.item.routeLat[nowPos]))
+            this.map.addOverlay(that.overlay)
+          }
+          else {
+            // 货物在仓库中，此时将货物定位到当前仓库
+            that.map.panTo(new BMap.Point(temp.warehouseLng, temp.warehouseLat))
+            for (var index in that.item.route)
+              if (that.item.route[index] == temp.warehouseAddress) {
+                that.current = parseInt(index)
+                // 添加当前位置的点标记
+                if (JSON.stringify(that.overlay) != JSON.stringify({}))
+                  that.map.removeOverlay(that.overlay)
+                that.overlay = new BMap.Marker(new BMap.Point(temp.warehouseLng, temp.warehouseLat))
+                this.map.addOverlay(that.overlay)
+                break
+              }
+          }
         }
       })
     },
