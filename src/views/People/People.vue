@@ -24,8 +24,8 @@
         <a-input-search addon-before="在用户类型下搜索用户"
                     enter-button="Search"
                     placeholder="请输入用户名"
-                    @search="typeNameSearch"/>
-        <a-button  style="float: left; margin-top: 16px;" @click="getData(1); isPage = true;"><a-icon type="sync"/>显示所有用户</a-button>
+                    @search="chokeTypeNameSearch"/>
+        <a-button  style="float: left; margin-top: 16px;" @click="chokeGetData(1); isPage = true;"><a-icon type="sync"/>显示所有用户</a-button>
       </div>
     </a-card>
     <a-card v-for="person in people"
@@ -56,6 +56,7 @@
 import fetchAPI from "@/utils/fetchAPI";
 import ChangeInfo from "@/views/People/ChangeInfo";
 import { EngToChn } from "@/utils/typeChange";
+import choke from "@/utils/choke.js";
 
 export default {
   name: "People",
@@ -78,6 +79,11 @@ export default {
       userType: 'user',
       // 是否显示页码
       isPage: true,
+      // 节流函数
+      chokeGetData: choke(this.getData, 2000),
+      chokeTypeNameSearch: choke(this.typeNameSearch, 1000),
+      chokeTypeSearch: choke(this.typeSearch, 1000),
+      chokeNameSearch: choke(this.nameSearch, 1000)
     }
   },
   methods: {

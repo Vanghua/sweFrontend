@@ -6,8 +6,8 @@
         <a-input-search addon-before="搜索仓库"
                     enter-button="Search"
                     placeholder="请输入仓库编号"
-                    @search="handleSearch"/>
-        <a-button  style="float: left; margin-top: 16px;" @click="getData(1)"><a-icon type="sync"/>显示所有仓库</a-button>
+                    @search="chokeHandleSearch"/>
+        <a-button  style="float: left; margin-top: 16px;" @click="chokeGetData(1)"><a-icon type="sync"/>显示所有仓库</a-button>
       </div>
     </a-card>
     <a-card v-for="house in houses"
@@ -27,13 +27,14 @@
                   v-model="pageNum"
                   :defaultPageSize="10"
                   :total="total"
-                  @change="handleChange"/>
+                  @change="chokeHandleChange"/>
   </div>
 </template>
 
 <script>
 import fetchAPI from "@/utils/fetchAPI";
 import houseType from "@/utils/houseType";
+import choke from "@/utils/choke.js";
 
 export default {
   name: "DeleteWareHouse",
@@ -45,7 +46,11 @@ export default {
       pageNum: 1,
       houses: [],
       isPage: true,
-      total: 0
+      total: 0,
+      // 节流函数
+      chokeHandleChange: choke(this.handleChange, 800),
+      chokeGetData: choke(this.getData, 2000),
+      chokeHandleSearch: choke(this.handleSearch, 1000)
     }
   },
   methods: {

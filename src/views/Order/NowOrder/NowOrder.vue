@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%; overflow-y: scroll;">
-    <a-tabs default-active-key="1" @change="pageChange" style="font-weight: bold;">
+    <a-tabs default-active-key="1" @change="choke" style="font-weight: bold;">
       <a-tab-pane key="1" tab="已取消订单">
         <a-card style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px;">
           <div style="overflow: hidden;">
@@ -8,12 +8,12 @@
             <a-input-search addon-before="按名称搜索"
                         enter-button="Search"
                         placeholder="请输入货物名称"
-                        @search="nameSearchHistory"/>
+                        @search="chokeNameSearchHistory"/>
              <a-input-search addon-before="按编号搜索"
                         enter-button="Search"
                         placeholder="请输入订单编号"
-                        @search="idSearchHistory" style="margin-top: 16px;"/>
-            <a-button  style="float: left; margin-top: 16px;" @click="getData()"><a-icon type="sync"/>显示所有历史订单</a-button>
+                        @search="chokeIdSearchHistory" style="margin-top: 16px;"/>
+            <a-button  style="float: left; margin-top: 16px;" @click="chokeGetData"><a-icon type="sync"/>显示所有历史订单</a-button>
           </div>
         </a-card>
         <a-card v-for="order in historyOrdersSub"
@@ -49,7 +49,7 @@
             </a-col>
           </a-row>
         </a-card>
-        <a-button type="primary" style="margin-top: 24px;" @click="handleGetMore">点击加载更多</a-button>
+        <a-button type="primary" style="margin-top: 24px;" @click="getMore">点击加载更多</a-button>
       </a-tab-pane>
       <a-tab-pane key="2" tab="审核中订单">
         <a-card style="font-size: 1.3rem; font-width: bold; margin-bottom: 16px;">
@@ -58,12 +58,12 @@
             <a-input-search addon-before="按名称搜索"
                         enter-button="Search"
                         placeholder="请输入货物名称"
-                        @search="nameSearchChecking"/>
+                        @search="chokeNameSearchChecking"/>
              <a-input-search addon-before="按编号搜索"
                         enter-button="Search"
                         placeholder="请输入订单编号"
-                        @search="idSearchChecking" style="margin-top: 16px;"/>
-            <a-button  style="float: left; margin-top: 16px;" @click="getData()"><a-icon type="sync"/>显示所有审核中订单</a-button>
+                        @search="chokeIdSearchChecking" style="margin-top: 16px;"/>
+            <a-button  style="float: left; margin-top: 16px;" @click="chokeGetData"><a-icon type="sync"/>显示所有审核中订单</a-button>
           </div>
         </a-card>
         <a-card v-for="order in checkingOrders"
@@ -103,12 +103,12 @@
             <a-input-search addon-before="按名称搜索"
                         enter-button="Search"
                         placeholder="请输入货物名称"
-                        @search="nameSearchWaiting"/>
+                        @search="chokeNameSearchWaiting"/>
              <a-input-search addon-before="按编号搜索"
                         enter-button="Search"
                         placeholder="请输入订单编号"
-                        @search="idSearchWaiting" style="margin-top: 16px;"/>
-            <a-button  style="float: left; margin-top: 16px;" @click="getData()"><a-icon type="sync"/>显示所有未付款订单</a-button>
+                        @search="chokeIdSearchWaiting" style="margin-top: 16px;"/>
+            <a-button  style="float: left; margin-top: 16px;" @click="chokeGetData"><a-icon type="sync"/>显示所有未付款订单</a-button>
           </div>
         </a-card>
         <a-card v-for="order in waitingOrders"
@@ -153,12 +153,12 @@
             <a-input-search addon-before="按名称搜索"
                         enter-button="Search"
                         placeholder="请输入货物名称"
-                        @search="nameSearchFinish"/>
+                        @search="chokeNameSearchFinish"/>
              <a-input-search addon-before="按编号搜索"
                         enter-button="Search"
                         placeholder="请输入订单编号"
-                        @search="idSearchFinish" style="margin-top: 16px;"/>
-            <a-button  style="float: left; margin-top: 16px;" @click="getData()"><a-icon type="sync"/>显示所有已完成订单</a-button>
+                        @search="chokeIdSearchFinish" style="margin-top: 16px;"/>
+            <a-button  style="float: left; margin-top: 16px;" @click="chokeGetData"><a-icon type="sync"/>显示所有已完成订单</a-button>
           </div>
         </a-card>
         <a-card v-for="order in finishOrders"
@@ -197,6 +197,7 @@
 
 <script>
 import fetchAPI from "@/utils/fetchAPI";
+import choke from "@/utils/choke";
 
 export default {
   name: "NowOrder",
@@ -231,7 +232,21 @@ export default {
       cancelFlex: 1,
       isCancel: true,
       cardOverflow: 'hidden',
-      size: '1.2rem'
+      size: '1.2rem',
+      // 节流函数--切换标题的节流
+      choke: choke(this.pageChange, 1000),
+      // 节流函数--加载更多的节流
+      getMore: choke(this.handleGetMore, 500),
+      // 搜索和重载的节流函数
+      chokeNameSearchHistory: choke(this.nameSearchHistory, 1000),
+      chokeIdSearchHistory: choke(this.idSearchHistory, 1000),
+      chokeNameSearchFinish: choke(this.nameSearchFinish, 1000),
+      chokeIdSearchFinish: choke(this.idSearchFinish, 1000),
+      chokeNameSearchWaiting: choke(this.nameSearchWaiting, 1000),
+      chokeIdSearchWaiting: choke(this.idSearchWaiting, 1000),
+      chokeNameSearchChecking: choke(this.nameSearchChecking, 1000),
+      chokeIdSearchChecking: choke(this.idSearchChecking, 1000),
+      chokeGetData: choke(this.getData, 2000),
     }
   },
   methods: {

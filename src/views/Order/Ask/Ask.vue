@@ -6,13 +6,13 @@
         <a-input-search addon-before="按名称搜索"
                     enter-button="Search"
                     placeholder="请输入货物名称"
-                    @search="nameSearch"/>
+                    @search="chokeNameSearch"/>
          <a-input-search addon-before="按编号搜索"
                     enter-button="Search"
                     placeholder="请输入订单编号"
-                    @search="idSearch"
+                    @search="chokeIdSearch"
                     style="margin-top: 16px;"/>
-        <a-button  style="float: left; margin-top: 16px;" @click="getData();"><a-icon type="sync"/>显示所有进行中的订单</a-button>
+        <a-button  style="float: left; margin-top: 16px;" @click="reData"><a-icon type="sync"/>显示所有进行中的订单</a-button>
       </div>
     </a-card>
     <a-card v-for="item in subItems"
@@ -52,6 +52,7 @@
 
 <script>
 import fetchAPI from "@/utils/fetchAPI";
+import choke from "@/utils/choke.js";
 
 export default {
   name: "Ask",
@@ -74,7 +75,13 @@ export default {
       cancelFlex: 1,
       isCancel: true,
       cardOverflow: 'hidden',
-      size: '1.2rem'
+      size: '1.2rem',
+      // 节流函数--重新加载数据的节流
+      reData: choke(this.getData, 2000),
+      // 节流函数--搜索名称的节流
+      chokeNameSearch: choke(this.nameSearch, 1000),
+      // 节流函数--搜索编号的节流
+      chokeIdSearch: choke(this.idSearch, 1000),
     }
   },
   methods: {
@@ -120,7 +127,6 @@ export default {
       }
       fetchAPI('/orders/getCurrentOrders','post',obj).then(res => {
         that.items = JSON.parse(res)
-        console.log(that.items)
         that.subItems = that.items.slice(0,5)
       })
     },

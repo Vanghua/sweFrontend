@@ -1,3 +1,4 @@
+// 当时不知道js的自带map，用这样方式实现map
 export default function(num) {
     switch(num) {
         case 1:

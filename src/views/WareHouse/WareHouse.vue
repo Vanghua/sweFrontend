@@ -4,38 +4,38 @@
     <a-input-search addon-before="按编号搜索仓库"
                   enter-button="Search"
                   v-if="isShowSearch"
-                  @search="handleIdSearch"
+                  @search="chokeHandleIdSearch"
                   placeholder="请输入仓库编号"
                   class="firstSearch"/>
     <a-input-search addon-before="按地址搜索仓库"
                   enter-button="Search"
                   v-if="isShowSearch"
-                  @search="handleAddressSearch"
+                  @search="chokeHandleAddressSearch"
                   placeholder="请输入仓库地址"
                   style="margin-top: 16px;"
                   class="secondSearch"/>
     <a-input-search addon-before="按省搜索仓库"
                     enter-button="Search"
                     v-if="isShowSearch"
-                    @search="handleProvinceSearch"
+                    @search="chokeHandleProvinceSearch"
                     placeholder="请输入仓库所属省份"
                     style="margin-top: 16px;"
                     class="firstSearch"/>
     <a-input-search addon-before="按城市搜索仓库"
                     enter-button="Search"
                     v-if="isShowSearch"
-                    @search="handleCitySearch"
+                    @search="chokeHandleCitySearch"
                     placeholder="请输入仓库所属城市"
                     style="margin-top: 16px;"
                     class="secondSearch"/>
     <a-input-search addon-before="按县或区搜索仓库"
                     enter-button="Search"
                     v-if="isShowSearch"
-                    @search="handleDistrictSearch"
+                    @search="chokeHandleDistrictSearch"
                     placeholder="请输入仓库所属区县"
                     style="margin-top: 16px;"/>
     <div style="overflow: hidden; margin-top: 16px;">
-      <a-button  style="float: left;" @click="getData(1)" v-if="isShowSearch"><a-icon type="sync"/>显示所有仓库</a-button>
+      <a-button  style="float: left;" @click="chokeGetData(1)" v-if="isShowSearch"><a-icon type="sync"/>显示所有仓库</a-button>
     </div>
     <a-card style="font-weight: bold; font-size: 1.2rem;" v-if="!isShowSearch">
       <div style="float: left;">您的仓库</div>
@@ -56,7 +56,7 @@
                   v-model="pageNum"
                   :defaultPageSize="10"
                   :total="total"
-                  @change="handleChange"
+                  @change="chokeHandleChange"
                   v-if="isPage"/>
   </a-card>
 </template>
@@ -64,6 +64,7 @@
 <script>
 import fetchAPI from "@/utils/fetchAPI";
 import houseType from "@/utils/houseType";
+import choke from "@/utils/choke.js";
 
 export default {
   name: "WareHouse",
@@ -85,7 +86,15 @@ export default {
       // 是否显示查询仓库搜索框(只有全局管理员有这个权限)
       isShowSearch: false,
       // 是否显示页码
-      isPage: this.$store.state.user.role == 'all' ? true : false
+      isPage: this.$store.state.user.role == 'all' ? true : false,
+      // 节流函数--对搜索,重载数据和页码切换功能进行节流,
+      chokeGetData: choke(this.getData, 2000),
+      chokeHandleIdSearch: choke(this.handleIdSearch, 1000),
+      chokeHandleAddressSearch: choke(this.handleAddressSearch, 1000),
+      chokeHandleProvinceSearch: choke(this.handleProvinceSearch, 1000),
+      chokeHandleCitySearch: choke(this.handleCitySearch, 1000),
+      chokeHandleDistrictSearch: choke(this.handleDistrictSearch, 1000),
+      chokeHandleChange: choke(this.handleChange, 800),
     }
   },
   methods: {

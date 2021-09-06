@@ -7,7 +7,7 @@
               mode="inline"
               :inlineCollapsed="collapsed"
               :default-open-keys="['PageViewUser', 'PageViewOrder', 'PageViewWareHouse', 'PageViewPeople']"
-              style="height: 100%; min-width: 100px; " @click="jump">
+              style="height: 100%; min-width: 100px; " @click="choke">
         <S-Menu :node="node" v-for="node in nodes"></S-Menu>
       </a-menu>
     </div>
@@ -38,6 +38,7 @@
 
 <script>
 import SMenu from './Smenu'
+import choke from "@/utils/choke.js"
 export default {
   name: "Page",
   components: {
@@ -65,7 +66,8 @@ export default {
       copyRight: 'Copyright  2021  山东大学(威海) 19计算机(中澳) 黄皓 朱胤璘 赵玉淋 樊华',
       nodes: this.dfsRouter(this.$store.state.permission.addRoutes[0]).children,
       isOverY: 'None',
-      isHidden: 'hidden'
+      isHidden: 'hidden',
+      choke: choke(this.jump, 500)
     }
   },
   methods: {

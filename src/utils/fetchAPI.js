@@ -26,7 +26,7 @@ export default function fetchAPI(url, method, data) {
         }).then(ans => {
             resolve(ans)
         }).catch(error => {
-            // notification.error({ message: '错误', description: error, key: 'ERROR' })
+            notification.error({ message: '错误', description: error, key: 'ERROR' })
       })
     })
 }
