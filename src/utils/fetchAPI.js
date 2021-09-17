@@ -10,7 +10,7 @@ export default function fetchAPI(url, method, data) {
     // URL起始
     const BASE_URL = '/api'
     // webapp的基础路径，手机上不存在跨域问题
-    // const BASE_URL = 'http://n2900b3853.imdo.co/api'
+    // const BASE_URL = 'http://39.96.175.246:8051/api'
     // 封装fetch
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + url, {

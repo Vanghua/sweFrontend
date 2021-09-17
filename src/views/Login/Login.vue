@@ -1,6 +1,8 @@
 <template>
   <div id="login">
-    <h1 id="title" :style="{width: '100%', marginTop: titleTop, color: '#F5F5DC', fontWeight: 'bold', letterSpacing: '5px', textShadow: '5px 5px 5px black'}">物流仓储管理系统</h1>
+    <p id="title" :style="{fontSize: '24px', width: '100%', marginTop: titleTop, color: '#F5F5DC', fontWeight: 'bold', letterSpacing: '5px', textShadow: '5px 5px 5px black'}">
+      <a href="#">物流仓储管理系统</a>
+    </p>
     <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
       <a-card id="loginCard" style="background-color: rgba(255,255,255,0.85); border-radius: 15px;">
         <a-form :form="form" @submit="submitAll">
@@ -174,6 +176,8 @@ export default {
   name: "Login",
   data() {
     return {
+      // 是否显示下载
+      download: true,
       titleTop: '44px',
       // 挂载表单
       form: this.$form.createForm(this),
@@ -198,8 +202,13 @@ export default {
     tabChange(key) {
       this.tabPos = key
       this.copyRight = this.tabPos == 3 ? '' : 'Copyrigt  2021  山东大学(威海) 19计算机(中澳) 黄皓 朱胤璘 赵玉淋 樊华'
-      if(key == 3)
+      if(key == 3) {
         this.titleTop = '16px'
+        this.download = false
+      } else {
+        this.titleTop = "44px"
+        this.download = true
+      }
     },
 
     // 网络请求问题
