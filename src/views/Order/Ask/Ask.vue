@@ -128,6 +128,7 @@ export default {
       fetchAPI('/orders/getCurrentOrders','post',obj).then(res => {
         that.items = JSON.parse(res)
         that.subItems = that.items.slice(0,5)
+        console.log(that.items)
       })
     },
 

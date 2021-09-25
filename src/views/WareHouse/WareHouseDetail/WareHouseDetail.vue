@@ -85,7 +85,8 @@
           <a-popconfirm title="确认要完成订单吗" okText="确认" cancelText="取消" @confirm="finishOrder(record)">
             <a-button type="danger" style="margin-right: 16px;" v-if="$store.state.user.role != 'trans' ? true : false">完成订单</a-button>
           </a-popconfirm>
-          <a-button type="primary" @click="handleOutHouse(record)" :disabled="$store.state.user.role === 'trans' ? false : true">出库</a-button>
+          <a-button type="primary" @click="handleOutHouse(record)">出库</a-button>
+<!--          <a-button type="primary" @click="handleOutHouse(record)" :disabled="$store.state.user.role === 'trans' ? false : true">出库</a-button>-->
         </div>
       </a-table>
     </a-card>
