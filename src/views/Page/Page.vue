@@ -125,7 +125,6 @@ export default {
       this.userName = this.$store.state.user.username
       // 获取权限路由，获取这个子路由是因为最外层一定是Page(所有权限)，考虑子路由的权限就可以了
       const routers = this.$store.state.permission.addRoutes.children
-
     },
     // 递归可访问的路由
     dfsRouter(router) {
@@ -142,7 +141,11 @@ export default {
       else {
         let children = []
         for(var i = 0; i < router.children.length; i++) {
-          children.push(this.dfsRouter(router.children[i]))
+            let child = this.dfsRouter(router.children[i]);
+            // 测试
+            if(child.title === "测试/快速原型")
+              child.hasChild = false;
+            children.push(child);
         }
         return {
           key: router.name,

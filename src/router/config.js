@@ -211,6 +211,29 @@ export const asyncRoutes = [
             meta: { title: '调度管理', keepalive: true, permission: ['all','assign','trans'], hidden: true, icon: 'control' },
           }
         ]
+      },
+      {
+        path: '/Page/Test/Test',
+        name: 'Test',
+        component: PageView,
+        meta: {title: '测试', keepalive: true, permission: ['all'], hidden: false, icon: 'control'},
+        children: [
+          {
+            path: '/Page/Test/Test',
+            redirect: '/Page/Test/Mine',
+            name: 'Test',
+            component: () => import('../views/test/test'),
+            meta: { title: '测试/快速原型', keepalive: true, permission: ['all'], hidden: false, icon: 'control' },
+            children: [
+              {
+                path: '/Page/Test/Mine',
+                name: 'MinePage',
+                component: () => import('../views/test/mine'),
+                meta: { title: '我的', keepalive: true, permission: ['all'], hidden: true, icon: 'control' }
+              }
+            ]
+          }
+        ]
       }
     ]
   }
