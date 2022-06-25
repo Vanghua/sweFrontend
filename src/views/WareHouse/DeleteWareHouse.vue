@@ -20,7 +20,7 @@
         <div>仓库容量：{{house.warehouse_storagenum}}</div>
       </div>
       <a-popconfirm title="确认要删除吗" okText="确认" cancelText="取消" @confirm="handleDelete(house)">
-        <a-button type="danger" style="float: left;">删除</a-button>
+        <a-button type="danger" style="float: left;" :disabled="true">删除</a-button>
       </a-popconfirm>
     </a-card>
     <a-pagination style="float: right; margin-top: 24px;"
