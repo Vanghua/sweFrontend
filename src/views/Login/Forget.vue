@@ -70,7 +70,7 @@ export default {
   data() {
     return {
       form: this.$form.createForm(this),
-      copyRight: 'Copyrigt  2021  山东大学(威海) 19计算机(中澳) 黄皓 朱胤璘 赵玉淋 樊华',
+      copyRight: 'Copyrigt  2022  山东大学(威海) 19计算机(中澳) 黄皓 朱胤璘 赵玉淋 樊华 张诗笛',
       resetBtn: false
     }
   },
