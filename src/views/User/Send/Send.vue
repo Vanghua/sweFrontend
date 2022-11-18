@@ -91,7 +91,6 @@ export default {
     },
 
     handleSubmit() {
-      console.log(this.acceptInfo)
       if(this.acceptInfo === undefined)
         this.$notification['error']({
             message: '失败',

@@ -79,8 +79,6 @@ export default {
       let that = this
       let obj = { ordersId: this.item.ordersId }
 
-      console.log(this.item)
-
       // 加载进度数据
       let tempData = []
       for(var i = 0; i < this.item.route.length; i++) {

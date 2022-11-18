@@ -1,7 +1,7 @@
 <template>
   <div id="login">
     <p id="title" :style="{fontSize: '24px', width: '100%', marginTop: titleTop, color: '#F5F5DC', fontWeight: 'bold', letterSpacing: '5px', textShadow: '5px 5px 5px black'}">
-      <a href="#">菜鸟校园物流帮手</a>
+      <a href="#">物流仓储管理系统</a>
     </p>
     <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
       <a-card id="loginCard" style="background-color: rgba(255,255,255,0.85); border-radius: 15px;">
@@ -194,14 +194,14 @@ export default {
       // 员工注册时选择的员工类型
       workerType: 'trans',
       // 版权信息
-      copyRight: 'Copyrigt  2022  山东大学(威海) 19计算机(中澳) 黄皓 朱胤璘 赵玉淋 樊华 张诗笛'
+      copyRight: 'Copyrigt  2022  山东大学(威海) 19计算机 黄皓 朱胤璘 赵玉淋 樊华'
     }
   },
   methods: {
     // 切换登录和注册触发事件
     tabChange(key) {
       this.tabPos = key
-      this.copyRight = this.tabPos == 3 ? '' : 'Copyrigt  2022  山东大学(威海) 19计算机(中澳) 黄皓 朱胤璘 赵玉淋 樊华 张诗笛'
+      this.copyRight = this.tabPos == 3 ? '' : 'Copyrigt  2022  山东大学(威海) 19计算机 黄皓 朱胤璘 赵玉淋 樊华'
       if(key == 3) {
         this.titleTop = '16px'
         this.download = false

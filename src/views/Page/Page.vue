@@ -63,7 +63,7 @@ export default {
       collapsed: false,
       menuWidth: '256px',
       rightWidth: 'calc(100% - 256px)',
-      copyRight: 'Copyright  2022  山东大学(威海) 19计算机(中澳) 黄皓 朱胤璘 赵玉淋 樊华 张诗笛',
+      copyRight: 'Copyright  2022  山东大学(威海) 19计算机 黄皓 朱胤璘 赵玉淋 樊华',
       nodes: this.dfsRouter(this.$store.state.permission.addRoutes[0]).children,
       isOverY: 'None',
       isHidden: 'hidden',
@@ -114,7 +114,7 @@ export default {
         this.rightWidth = '100%'
         this.isShow = false
         this.menuPosition = 'absolute'
-        this.copyRight = 'Copyrigt  2021  山东大学(威海)'
+        this.copyRight = 'Copyrigt  2022  山东大学(威海)'
         this.isOverY = 'scroll'
         this.isHidden = 'None'
       }

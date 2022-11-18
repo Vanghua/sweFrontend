@@ -2,6 +2,7 @@ import Login from "@/views/Login/Login";
 import Page from "@/views/Page/Page";
 import Forget from "@/views/Login/Forget";
 import PageView from "@/views/Page/PageView";
+import ErrorPage from "@/views/ErrorPage/ErrorPage";
 
 export const constantRoutes = [
   {
@@ -15,7 +16,13 @@ export const constantRoutes = [
     name: 'Forget',
     component: Forget,
     meta: { title: '忘记密码', keepalive: true }
-  }
+  },
+  {
+    path: '*', // 捕获所有路由
+    name: '404',
+    component: ErrorPage,
+    meta: { title: '页面丢失', keepalive: true },
+  },
 ]
 
 export const asyncRoutes = [
@@ -45,7 +52,7 @@ export const asyncRoutes = [
             meta: { title: '寄件', keepalive: true, permission: ['all','user'], hidden: false, icon: 'gift' },
           },
           {
-            path: '/Page/User/Send/MailInfo',
+            path: '/Page/User/Send/MailInfo/:mailInfo',
             name: 'MailInfo',
             component: () => import('../views/User/Send/MailInfo'),
             meta: { title: '寄件人信息', keepalive: true, permission: ['all','user'], hidden: true, icon: 'gift' },

@@ -18,7 +18,7 @@ router.beforeEach((to, from, next) => {
         // 重新根据用户权限加载路由
         store.dispatch('CheckRole', store.state.user.role)
         router.addRoutes(store.state.permission.addRoutes)
-        // 取出缓存中的to的信息
+        // 取出缓存中的to的信息，避免params传参的刷新后数据丢失问题。后续可优化，因为保存参数即可，没必要保存整个to
         let objTo = JSON.parse(sessionStorage.getItem("to"))
         sessionStorage.removeItem("to")
         next({...objTo})
@@ -26,6 +26,7 @@ router.beforeEach((to, from, next) => {
     // 下面处理非刷新的情况
     else {
         // 每次跳转前都保存to，等到刷新时to的信息会被销毁
+        // 保存to的原因是项目中所有路由跳转传参全部采用不在URL暴露数据的params传参，但缺点是刷新后数据会丢失，因此使用本地存储保存数据
         // 为了鲁棒性，先检验是否已经存储了to
         if(sessionStorage.getItem('to'))
             sessionStorage.removeItem('to')
